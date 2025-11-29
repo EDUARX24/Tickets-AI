@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row g-4">
+    <!-- Hero / Presentación de la empresa -->
+    <div class="col-lg-12">
+      <div class="p-5 rounded-3" style="background: linear-gradient(135deg, #1d3557, #457b9d); color: #fff;">
+        <h1 class="mb-3 fw-bold text-center">Soluciones Profesionales de Soporte Técnico</h1>
+        <p class="fs-5 mb-4 text-center">
+          En <strong>IT MultiService TX</strong> garantizamos la continuidad operativa de tu infraestructura
+          tecnológica brindando soporte 24/7, atención a incidentes, monitoreo preventivo y asistencia en sitio.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg px-4">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+          </a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg px-4">
+            <i class="bi bi-person-plus me-2"></i>Crear cuenta
+          </a>
+          <a href="#servicios" class="btn btn-outline-light btn-lg px-4">
+            <i class="bi bi-layers-half me-2"></i>Ver Servicios
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de servicios -->
+  <div class="row mt-5 g-4" id="servicios">
+    <div class="col-12">
+      <h3 class="mb-3">Nuestros Servicios</h3>
+      <p class="text-muted">
+        Brindamos soporte técnico integral adaptado a las necesidades de tu empresa y tus procesos operativos.
+      </p>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Mesa de ayuda y gestión de tickets</h5>
+          <p class="card-text text-muted">
+            Registro, clasificación y seguimiento de incidencias en tiempo real.  
+            Panel especializado para usuarios y administradores.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Soporte remoto y en sitio</h5>
+          <p class="card-text text-muted">
+            Atención inmediata para usuarios, equipos de oficina, puntos de venta,
+            redes y servidores.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Monitoreo preventivo</h5>
+          <p class="card-text text-muted">
+            Supervisión continua de tu infraestructura TI para reducir caídas y fallos críticos.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de SLA -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="p-4 rounded-3 bg-light d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-1">Compromiso con la continuidad del servicio</h5>
+          <p class="mb-0 text-muted">
+            Acuerdos de Nivel de Servicio (SLA), tiempos de respuesta garantizados y reportes periódicos.
+          </p>
+        </div>
+        <a href="#" class="btn btn-outline-primary mt-3 mt-md-0">
+          Solicitar información comercial
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
