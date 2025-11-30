@@ -23,8 +23,14 @@ def register():
 
         # validar campos vacíos
         if not username or not email or not password:
-            flash("Please fill out all fields", "danger")
-            return redirect(url_for("auth.register"))
+            # cambiar el flash por la de sweetalert 
+            data = {
+                'icon': 'error',
+                'title': 'Error',
+                'text': 'Falto llenar un campo',
+                'redirect': url_for('auth.register')
+            }
+            return render_template("notification.html", data=data)
 
         if supabase is None:
             flash("Error interno con Supabase", "danger")

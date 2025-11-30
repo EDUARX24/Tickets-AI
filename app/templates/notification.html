@@ -1,0 +1,37 @@
+{% extends "layout.html" %} 
+{% block title %}Notificación{% endblock %} 
+{% block content %}
+
+{% endblock %} 
+{% block JS %} {{ super() }}
+<script>
+  document.addEventListener("DOMContentLoaded", async function () {
+
+    // Convertimos el dict de Python en objeto JS
+    const data = JSON.parse(`{{ data | tojson | safe }}`);
+
+    const icon  = data.icon;
+    const title = data.title;
+    const text  = data.text;
+    const reload = data.redirect;
+
+    await Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      showConfirmButton: true,
+      confirmButtonText: "Aceptar",
+      timer: 1500,
+      timerProgressBar: true
+    });
+
+    window.location.href = reload;
+    cleanHistory();
+  });
+
+  // Limpia el historial para que no vuelva al alert si retrocede
+  function cleanHistory() {
+    history.replaceState(null, null, window.location.href);
+  }
+</script>
+{% endblock %}
