@@ -7,4 +7,4 @@ main_bp = Blueprint("main", __name__)
 @main_bp.route("/")
 def index():
     # antes era tu @app.route("/") en application.py
-    return render_template("prueba.html")
+    return render_template("main/index.html",active_page="dashboard")
