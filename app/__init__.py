@@ -16,8 +16,6 @@ def create_app():
     global supabase, db
 
     load_dotenv()
-
-    # 👇 OJO: ya NO ponemos template_folder="../templates"
     app = Flask(__name__)  # por defecto usa app/templates y app/static
 
     # Config básica
@@ -42,9 +40,11 @@ def create_app():
     from .main.routes import main_bp
     from .auth.routes import auth_bp
     from .admin.routes import admin_bp
+    from .clients.routes import client_admin_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(client_admin_bp)
 
     return app

@@ -83,23 +83,59 @@ def login():
         )
         user = user_response.data[0] if user_response.data else None
 
+        # Validar credenciales
         if user and check_password_hash(user["password"], password):
-            # OJO: ajusta según tus columnas reales
+            # guardar datos en sesión
             session["user_id"] = user.get("username_id") or user.get("id")
             session["email"] = user["email"]
             session["role"] = user["role"]
+            print(f"User role: {session['role']}")
 
             flash("Logged in successfully!", "success")
 
-            if user["role"] == "admin_cliente":
+            # ─────────────────────────────────────────────
+            # ROL: sysAdmin  → home de admin general
+            # ─────────────────────────────────────────────
+            if user["role"] == "sysAdmin":
                 return redirect(url_for("admin.home_admin"))
+
+            # ─────────────────────────────────────────────
+            # ROL: admin_cliente → validar compañía
+            # ─────────────────────────────────────────────
+            elif user["role"] == "admin_cliente":
+                user_id = session["user_id"]
+
+                # 1) Buscar si ya tiene compañía asociada
+                company_resp = (
+                    supabase.table("company")
+                    .select("company_id")
+                    .eq("id_username", user_id)   # FK hacia users
+                    .execute()
+                )
+
+                if company_resp.data:
+                    # Ya tiene compañía, guardar en sesión
+                    company_id = company_resp.data[0]["company_id"]
+                    session["company_id"] = company_id
+                    return redirect(url_for("client_admin.home_client_admin"))
+                else:
+                    # NO tiene compañía → mandarlo al formulario de creación
+                    flash("Debes registrar la compañía para continuar.", "info")
+                    return redirect(url_for("client_admin.create_company"))
+
+            # ─────────────────────────────────────────────
+            # Otros roles → home general
+            # ─────────────────────────────────────────────
             else:
                 return redirect(url_for("main.index"))
 
+        # Si credenciales inválidas
         flash("Invalid email or password", "danger")
         return redirect(url_for("auth.login"))
 
-    return render_template("auth/login.html",active_page="login")
+    # GET
+    return render_template("auth/login.html", active_page="login")
+
 
 
 @auth_bp.route("/logout")
