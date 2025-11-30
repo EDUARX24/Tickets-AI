@@ -55,6 +55,8 @@ def create_company():
         "id_username":    user_id,                             # FK hacia users.username_id
         "created_at":     datetime.utcnow().isoformat(),       # opcional si la tabla no lo autogenera
     }
+    #print de todo el payload en una línea para debug
+    print("Creating company with payload:", payload)
 
     # Validación mínima: nombre legal obligatorio
     if not payload["name"]:
