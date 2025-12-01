@@ -112,3 +112,30 @@ def create_company():
         "redirect": url_for("client_admin.create_company"),
     }
     return render_template("notification.html", data=data)
+
+#endpoint de bienvenida para admin_cliente
+@client_admin_bp.route("/client_admin/home")
+def home_client_admin():
+    # ─────────────────────────────────────────────
+    # Proteger la ruta: solo usuarios logueados
+    # y con rol admin_cliente
+    # ─────────────────────────────────────────────
+    if "user_id" not in session:
+        data = {
+            "icon": "warning",
+            "title": "Sesión requerida",
+            "text": "Debes iniciar sesión para acceder a esta página.",
+            "redirect": url_for("auth.login"),
+        }
+        return render_template("notification.html", data=data)
+
+    if session.get("role") != "admin_cliente":
+        data = {
+            "icon": "error",
+            "title": "Acceso denegado",
+            "text": "No tienes permisos para acceder a esta página.",
+            "redirect": url_for("main.index"),
+        }
+        return render_template("notification.html", data=data)
+
+    return render_template("clients/homeClients.html")

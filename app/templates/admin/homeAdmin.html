@@ -1,17 +1,180 @@
 {% extends "layout.html" %}
-{% block title %}Admin Home{% endblock %}
+{% block title %}Panel de SysAdmin{% endblock %}
 
 {% block content %}
-<!-- Admin Home Start -->
 <div class="container-fluid pt-4 px-4">
+
+    <!-- Métricas principales -->
+    <div class="row g-4 mb-3">
+        <!-- Total Tickets -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-ticket-perforated fs-1 text-primary"></i>
+                <div class="text-end">
+                    <p class="mb-2 text-muted">Tickets</p>
+                    <h4 class="mb-0">{{ total_tickets or 0 }}</h4>
+                    <small class="text-muted">Registrados</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Usuarios -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-people fs-1 text-success"></i>
+                <div class="text-end">
+                    <p class="mb-2 text-muted">Usuarios</p>
+                    <h4 class="mb-0">{{ total_users or 0 }}</h4>
+                    <small class="text-muted">Cuentas creadas</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colaboradores -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-person-workspace fs-1 text-warning"></i>
+                <div class="text-end">
+                    <p class="mb-2 text-muted">Colaboradores</p>
+                    <h4 class="mb-0">{{ total_collaborators or 0 }}</h4>
+                    <small class="text-muted">Miembros del equipo</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compañías -->
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="bi bi-buildings fs-1 text-info"></i>
+                <div class="text-end">
+                    <p class="mb-2 text-muted">Compañías</p>
+                    <h4 class="mb-0">{{ total_companies or 0 }}</h4>
+                    <small class="text-muted">Asociadas</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listados -->
     <div class="row g-4">
-        <div class="col-12">
+        <!-- Tickets recientes -->
+        <div class="col-lg-8">
             <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Welcome to the Clients admin Dashboard - admin</h6>
-                <p>This is the home page for administrators. Here you can manage users, view reports, and configure settings.</p>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Tickets recientes</h6>
+                    <a href="#" class="small text-primary">Ver todos</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Título</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if recent_tickets %}
+                                {% for t in recent_tickets %}
+                                <tr>
+                                    <td>{{ t.id }}</td>
+                                    <td class="text-truncate" style="max-width: 220px;">
+                                        {{ t.title }}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ t.status_color or 'secondary' }}">
+                                            {{ t.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge border text-{{ t.priority_color or 'dark' }}">
+                                            {{ t.priority }}
+                                        </span>
+                                    </td>
+                                    <td>{{ t.user_name }}</td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ t.created_at }}
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">
+                                        No hay tickets registrados todavía.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Usuarios / Colaboradores / Compañías -->
+        <div class="col-lg-4">
+            <!-- Usuarios -->
+            <div class="bg-light rounded p-4 mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Usuarios</h6>
+                    <a href="#" class="small text-primary">Ver todos</a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% if recent_users %}
+                        {% for u in recent_users %}
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-semibold">{{ u.name }}</span>
+                                <br>
+                                <small class="text-muted">{{ u.email }}</small>
+                            </div>
+                            <span class="badge bg-light text-secondary border">
+                                {{ u.role }}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item px-0 text-muted">
+                            No hay usuarios para mostrar.
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Compañías -->
+            <div class="bg-light rounded p-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0">Compañías</h6>
+                    <a href="#" class="small text-primary">Ver todas</a>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% if recent_companies %}
+                        {% for c in recent_companies %}
+                        <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="fw-semibold">{{ c.name }}</span>
+                                <br>
+                                <small class="text-muted">
+                                    {{ c.commercialName or 'Sin nombre comercial' }}
+                                </small>
+                            </div>
+                            <span class="badge bg-light text-secondary border">
+                                {{ c.countryCity or 'Sin ciudad' }}
+                            </span>
+                        </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item px-0 text-muted">
+                            No hay compañías para mostrar.
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </div>
 </div>
-<!-- Admin Home End -->
 {% endblock %}
