@@ -1,53 +1,89 @@
-{% extends "layout.html" %}
-<!-- Hover added -->
-<div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action active"
-        >Active item</a
-    >
-    <a href="#" class="list-group-item list-group-item-action"
-        >Item</a
-    >
-    <a href="#" class="list-group-item list-group-item-action disabled"
-        >Disabled item</a
-    >
-</div>
-{% block title %}login{% endblock %}
+{% extends "layout.html" %} {% block title %}Iniciar sesión{% endblock %} {%
+block content %}
 
+<style>
+  .auth-wrapper {
+    min-height: 90vh;
+  }
 
-{% block content %}
-<!-- Sign In Start -->
-<div class="container-fluid">
-    <div class="row h-100 align-items-center justify-content-center" style="min-height: 90vh;">
-        <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-5">
-            <form method="post" action="{{ url_for('auth.login') }}">
-                <div class="bg-light rounded p-4 p-sm-5 my-4 mx-3">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <a href="index.html" class="">
-                            <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
-                        </a>
-                        <h3>Sign In</h3>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
-                        <label for="floatingInput">Email address</label>
-                    </div>
-                    <div class="form-floating mb-4">
-                        <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
-                        <label for="floatingPassword">Password</label>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                        </div>
-                        <a href="">Forgot Password</a>
-                    </div>
-                    <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
-                    <p class="text-center mb-0">Don't have an Account? <a href="">Sign Up</a></p>
-                </div>
-            </form>
+  .auth-card {
+    border-radius: 1.5rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  }
+</style>
+
+<div
+  class="container-fluid auth-wrapper d-flex align-items-center justify-content-center"
+>
+  <div class="col-11 col-sm-8 col-md-6 col-lg-4 col-xl-4">
+    <form method="post" action="{{ url_for('auth.login') }}">
+      <div class="bg-light auth-card p-4 p-sm-5 my-4">
+        <!-- Encabezado centrado y con más espacio -->
+        <div class="text-center mb-4">
+          <div class="d-inline-flex align-items-center mb-2">
+            <i class="fa fa-hashtag me-2 text-primary fs-4"></i>
+            <span class="h4 mb-0 text-primary fw-bold">IT MultiService TX</span>
+          </div>
+          <h5 class="fw-semibold mb-1">Iniciar sesión</h5>
+          <p class="text-muted mb-0">
+            Accede a tu cuenta para gestionar tus tickets de soporte.
+          </p>
         </div>
-    </div>
+
+        <!-- Campos -->
+        <div class="form-floating mb-3">
+          <input
+            type="email"
+            class="form-control"
+            id="floatingInput"
+            name="email"
+            placeholder="correo@ejemplo.com"
+          />
+          <label for="floatingInput">Correo electrónico</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <input
+            type="password"
+            class="form-control"
+            id="floatingPassword"
+            name="password"
+            placeholder="Contraseña"
+          />
+          <label for="floatingPassword">Contraseña</label>
+        </div>
+
+        <!-- Recordar / Olvidé contraseña -->
+        <div
+          class="d-flex align-items-center justify-content-between gap-3 mb-4"
+        >
+          <div class="form-check d-flex align-items-center gap-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="exampleCheck1"
+            />
+            <label class="form-check-label" for="exampleCheck1"
+              >Recuérdame</label
+            >
+          </div>
+
+          <a href="#" class="small">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <!-- Botón -->
+        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">
+          Ingresar
+        </button>
+
+        <!-- Enlace a registro -->
+        <p class="text-center mb-0">
+          ¿No tienes una cuenta?
+          <a href="{{ url_for('auth.register') }}">Regístrate</a>
+        </p>
+      </div>
+    </form>
+  </div>
 </div>
-<!-- Sign In End -->
+
 {% endblock %}

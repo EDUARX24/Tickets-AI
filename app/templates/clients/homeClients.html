@@ -1,18 +1,212 @@
 {% extends "layout.html" %}
+{% block title %}Panel de Cliente{% endblock %}
 
 {% block content %}
-<!-- agregar div de home clientes -->
-<div class="container-fluid pt-4 px-4">
+
+<style>
+  /* Fondo general del área de cliente */
+  .client-main {
+    background: #f3f4f6;
+    min-height: 90vh;
+  }
+
+  /* Cards principales */
+  .client-card {
+    border-radius: 1.25rem;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  }
+
+  /* Cards de métricas */
+  .stat-card {
+    border-radius: 1.25rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+  }
+
+  .stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  /* Encabezados de secciones */
+  .section-title {
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
+
+  .table thead tr {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .table tbody td {
+    vertical-align: middle;
+  }
+</style>
+
+<main class="client-main">
+  <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">Welcome to the Clients Admin Dashboard</h6>
-                <p>PANTALLA DE HOME PARA CLIENTES ADMIN.</p>
-            </div>
-            <!-- link para crear company_users -->
-            <div class="mt-4">
-                <a href="{{ url_for('client_admin.create_company_user') }}" class="btn btn-primary">Create Company User</a>
-            </div>
+
+      <!-- CABECERA -->
+      <div class="col-12">
+        <div class="bg-white client-card p-4 mb-2 d-flex flex-wrap justify-content-between align-items-center">
+          <div class="mb-3 mb-md-0">
+            <p class="section-title mb-1">Panel de cliente</p>
+            <h3 class="mb-1">Administración de tickets de soporte</h3>
+            <p class="mb-0 text-muted">
+              Empresa: <strong>Nombre de la empresa</strong><br>
+              Admin: <strong>Nombre del administrador</strong>
+            </p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <!-- Botón aún sin funcionalidad real -->
+            <a href="#" class="btn btn-primary">
+              <i class="bi bi-plus-circle me-1"></i> Nuevo ticket
+            </a>
+            <!-- ESTE SÍ ES FUNCIONAL -->
+            <a href="{{ url_for('client_admin.create_company_user') }}" class="btn btn-outline-primary">
+              <i class="bi bi-person-plus me-1"></i> Registrar usuario operativo
+            </a>
+          </div>
         </div>
+      </div>
+
+      <!-- MÉTRICAS PRINCIPALES -->
+      <div class="col-sm-6 col-xl-3">
+        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+          <div>
+            <p class="mb-1 text-muted small">Tickets abiertos</p>
+            <h4 class="mb-0">0</h4>
+            <small class="text-muted">Actualmente en proceso</small>
+          </div>
+          <div class="stat-icon bg-primary-subtle text-primary">
+            <i class="bi bi-ticket-perforated"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-xl-3">
+        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+          <div>
+            <p class="mb-1 text-muted small">Tickets resueltos</p>
+            <h4 class="mb-0">0</h4>
+            <small class="text-muted">Histórico de soluciones</small>
+          </div>
+          <div class="stat-icon bg-success-subtle text-success">
+            <i class="bi bi-check-circle"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-xl-3">
+        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+          <div>
+            <p class="mb-1 text-muted small">Fuera de SLA</p>
+            <h4 class="mb-0">0</h4>
+            <small class="text-muted">Tickets vencidos</small>
+          </div>
+          <div class="stat-icon bg-warning-subtle text-warning">
+            <i class="bi bi-exclamation-triangle"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-xl-3">
+        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+          <div>
+            <p class="mb-1 text-muted small">Este mes</p>
+            <h4 class="mb-0">0</h4>
+            <small class="text-muted">Tickets creados</small>
+          </div>
+          <div class="stat-icon bg-info-subtle text-info">
+            <i class="bi bi-calendar-event"></i>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- SEGUNDA FILA: TICKETS + USUARIOS -->
+    <div class="row g-4 mt-1">
+
+      <!-- TICKETS RECIENTES -->
+      <div class="col-lg-8">
+        <div class="bg-white client-card h-100 p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <p class="section-title mb-1">Tickets</p>
+              <h6 class="mb-0">Tickets recientes</h6>
+            </div>
+            <!-- Sin endpoint todavía -->
+            <a href="#" class="small text-primary">Ver todos</a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr class="text-muted small">
+                  <th>#</th>
+                  <th>Título</th>
+                  <th>Estado</th>
+                  <th>Prioridad</th>
+                  <th>Creado por</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody class="small">
+                <!-- Placeholder estático hasta que tengamos datos reales -->
+                <tr>
+                  <td colspan="6" class="text-center text-muted py-4">
+                    Aún no hay tickets registrados para esta empresa.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- USUARIOS DE LA EMPRESA -->
+      <div class="col-lg-4">
+        <div class="bg-white client-card p-4 h-100">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <p class="section-title mb-1">Usuarios</p>
+              <h6 class="mb-0">Usuarios de la empresa</h6>
+            </div>
+            <a href="{{ url_for('client_admin.create_company_user') }}" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-person-plus me-1"></i> Nuevo
+            </a>
+          </div>
+
+          <ul class="list-group list-group-flush">
+            <!-- Placeholder estático hasta que tengamos company_users -->
+            <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-semibold">Sin usuarios registrados</span><br>
+                <small class="text-muted">Registra colaboradores operativos para que puedan crear tickets.</small>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
 {% endblock %}

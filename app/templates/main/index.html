@@ -1,92 +1,310 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block content %}
+<style>
+  /* Card lateral info empresa */
+  .info-card {
+    border-radius: 1.5rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.3);
+  }
+  /* Cards de “qué ofrecemos” */
+  .feature-card {
+    border-radius: 1.5rem;
+    transition: transform 0.18s ease, box-shadow 0.18s ease,
+      background-color 0.18s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+    background-color: #f9fafb;
+  }
+  /* Pasos numerados */
+  .step-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  /* CTA final */
+  .cta-portal {
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    box-shadow: 0 18px 40px rgba(30, 64, 175, 0.6);
+  }
+</style>
+<main class="bg-body-tertiary">
+  <!-- HERO DE BIENVENIDA -->
+  <section class="py-5 py-lg-6">
+    <div class="container-xxl">
+      <div class="row align-items-center g-5">
+        <!-- Columna de texto -->
+        <div class="col-lg-7">
+          <!-- Etiqueta pequeña superior -->
+          <span class="badge rounded-pill bg-primary-subtle text-primary mb-3">
+            <i class="bi bi-headset me-2"></i> Portal de clientes – Soporte
+            técnico
+          </span>
 
-{% block content %}
-<div class="container-fluid py-4">
-  <div class="row g-4">
-    <!-- Hero / Presentación de la empresa -->
-    <div class="col-lg-12">
-      <div class="p-5 rounded-3" style="background: linear-gradient(135deg, #1d3557, #457b9d); color: #fff;">
-        <h1 class="mb-3 fw-bold text-center">Soluciones Profesionales de Soporte Técnico</h1>
-        <p class="fs-5 mb-4 text-center">
-          En <strong>IT MultiService TX</strong> garantizamos la continuidad operativa de tu infraestructura
-          tecnológica brindando soporte 24/7, atención a incidentes, monitoreo preventivo y asistencia en sitio.
-        </p>
+          <h1 class="fw-bold mb-3 lh-sm">
+            Bienvenido al portal de soporte técnico de
+            <span class="d-block text-primary">IT MultiService TX</span>
+          </h1>
 
-        <div class="d-flex justify-content-center gap-3 mt-4">
-          <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-lg px-4">
-            <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+          <p class="lead text-body-secondary mb-3">
+            Este es el espacio oficial donde nuestros clientes pueden registrar
+            incidentes, dar seguimiento a sus solicitudes y comunicarse
+            directamente con el equipo de soporte técnico de
+            <strong>IT MultiService TX</strong>.
+          </p>
+
+          <p class="text-body-secondary mb-4">
+            Trabajamos para garantizar la continuidad de tus operaciones
+            tecnológicas con una atención rápida, ordenada y trazable. Desde
+            este portal podrás gestionar tus tickets, consultar estados y
+            recibir notificaciones sobre las soluciones aplicadas.
+          </p>
+
+          <!-- Botones principales -->
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <a
+              href="{{ url_for('auth.login') }}"
+              class="btn btn-primary btn-lg px-4 shadow-sm"
+            >
+              <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+            </a>
+            <a
+              href="{{ url_for('auth.register') }}"
+              class="btn btn-outline-primary btn-lg px-4"
+            >
+              <i class="bi bi-person-plus me-2"></i>Crear cuenta
+            </a>
+          </div>
+
+          <!-- Pequeña guía de uso -->
+          <div class="d-flex flex-wrap gap-4 mt-2">
+            <div class="d-flex align-items-start gap-2">
+              <div
+                class="badge rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+                style="width: 32px; height: 32px"
+              >
+                1
+              </div>
+              <div>
+                <h6 class="mb-0 fw-semibold">Regístrate o inicia sesión</h6>
+                <small class="text-body-secondary"
+                  >Crea tu cuenta de empresa o ingresa con tus
+                  credenciales.</small
+                >
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-2">
+              <div
+                class="badge rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+                style="width: 32px; height: 32px"
+              >
+                2
+              </div>
+              <div>
+                <h6 class="mb-0 fw-semibold">Registra tus incidencias</h6>
+                <small class="text-body-secondary"
+                  >Cuéntanos qué está pasando en tu infraestructura TI.</small
+                >
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start gap-2">
+              <div
+                class="badge rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
+                style="width: 32px; height: 32px"
+              >
+                3
+              </div>
+              <div>
+                <h6 class="mb-0 fw-semibold">Da seguimiento a tus tickets</h6>
+                <small class="text-body-secondary"
+                  >Consulta estados, respuestas y tiempos de atención.</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna derecha: tarjeta informativa / contacto -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-lg rounded-4 bg-white">
+            <div class="card-body p-4 p-lg-4">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h5 class="fw-semibold mb-0">Sobre IT MultiService TX</h5>
+                <span class="badge bg-primary-subtle text-primary">
+                  Soporte empresarial
+                </span>
+              </div>
+
+              <p class="text-body-secondary mb-3">
+                Somos una empresa especializada en soporte técnico y gestión de
+                infraestructura tecnológica para empresas. Acompañamos a
+                nuestros clientes en la operación diaria, resolución de
+                incidentes y mejora continua de sus servicios TI.
+              </p>
+
+              <ul class="list-unstyled mb-3 small">
+                <li class="mb-2 d-flex">
+                  <i class="bi bi-geo-alt me-2 text-primary fs-5"></i>
+                  <span>
+                    Dirección:
+                    <strong>5607 Beaver Pass Ln, Katy TX 77449, EE.UU</strong>
+                  </span>
+                </li>
+                <li class="mb-2 d-flex">
+                  <i class="bi bi-telephone me-2 text-primary fs-5"></i>
+                  <span>
+                    Contacto comercial y soporte:
+                    <strong>+1 (346) 777-4498</strong>
+                  </span>
+                </li>
+                <li class="mb-2 d-flex">
+                  <i class="bi bi-envelope me-2 text-primary fs-5"></i>
+                  <span>
+                    Correo de soporte:
+                    <strong>info@itmultiservicetx.com</strong>
+                  </span>
+                </li>
+                <li class="mb-2 d-flex">
+                  <i class="bi bi-clock me-2 text-primary fs-5"></i>
+                  <span>
+                    Horario de atención:
+                    <strong>Lunes a viernes, 8:00 a.m. – 6:00 p.m.</strong>
+                  </span>
+                </li>
+              </ul>
+
+              <div class="alert alert-primary small mb-0 border-0" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                Si tu empresa ya tiene convenio activo con IT MultiService TX,
+                solicita a tu administrador interno el acceso al portal de
+                soporte.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- row -->
+    </div>
+    <!-- container -->
+  </section>
+
+  <!-- SECCIÓN: QUÉ OFRECEMOS -->
+  <section class="py-5 border-top bg-white">
+    <div class="container-xxl">
+      <div class="row mb-4">
+        <div class="col-12 col-lg-8">
+          <h3 class="fw-semibold mb-2">
+            ¿Qué te ofrece nuestro portal de soporte?
+          </h3>
+          <p class="text-body-secondary mb-0">
+            El portal de clientes de <strong>IT MultiService TX</strong> está
+            diseñado para que la comunicación entre tu empresa y nuestro equipo
+            técnico sea clara, ordenada y trazable.
+          </p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm border-0 rounded-4 feature-card">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center mb-3">
+                <div
+                  class="feature-icon bg-primary-subtle text-primary d-flex align-items-center justify-content-center me-3"
+                >
+                  <i class="bi bi-inboxes fs-5"></i>
+                </div>
+                <h5 class="card-title mb-0">Registro de incidencias</h5>
+              </div>
+              <p class="card-text text-body-secondary mb-0">
+                Registra de forma sencilla los problemas que afecten a tus
+                equipos, redes o sistemas, indicando prioridad, área afectada y
+                detalles del incidente.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm border-0 rounded-4 feature-card">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center mb-3">
+                <div
+                  class="feature-icon bg-success-subtle text-success d-flex align-items-center justify-content-center me-3"
+                >
+                  <i class="bi bi-chat-dots fs-5"></i>
+                </div>
+                <h5 class="card-title mb-0">Comunicación con soporte</h5>
+              </div>
+              <p class="card-text text-body-secondary mb-0">
+                Mantén una comunicación directa con nuestro equipo técnico,
+                agrega comentarios a tus tickets y recibe actualizaciones sobre
+                las acciones realizadas.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm border-0 rounded-4 feature-card">
+            <div class="card-body p-4">
+              <div class="d-flex align-items-center mb-3">
+                <div
+                  class="feature-icon bg-warning-subtle text-warning d-flex align-items-center justify-content-center me-3"
+                >
+                  <i class="bi bi-graph-up-arrow fs-5"></i>
+                </div>
+                <h5 class="card-title mb-0">Seguimiento y trazabilidad</h5>
+              </div>
+              <p class="card-text text-body-secondary mb-0">
+                Consulta el historial de tus tickets, estados de atención,
+                tiempos de respuesta y soluciones aplicadas para cada incidente
+                registrado.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- row -->
+    </div>
+    <!-- container -->
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="py-5 border-top">
+    <div class="container-xxl">
+      <div
+        class="p-4 p-lg-4 rounded-4 bg-primary text-white d-flex flex-wrap justify-content-between align-items-center shadow-sm"
+      >
+        <div class="mb-3 mb-md-0">
+          <h4 class="mb-1 fw-semibold">
+            ¿Listo para gestionar tus incidencias con nuestro equipo?
+          </h4>
+          <p class="mb-0 text-white-50">
+            Accede al portal, registra tus tickets y mantén la operación
+            tecnológica de tu empresa bajo control.
+          </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="{{ url_for('auth.login') }}" class="btn btn-light">
+            Iniciar sesión
           </a>
-          <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-lg px-4">
-            <i class="bi bi-person-plus me-2"></i>Crear cuenta
+          <a
+            href="{{ url_for('auth.register') }}"
+            class="btn btn-outline-light"
+          >
+            Crear cuenta
           </a>
-          <a href="#servicios" class="btn btn-outline-light btn-lg px-4">
-            <i class="bi bi-layers-half me-2"></i>Ver Servicios
-          </a>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Sección de servicios -->
-  <div class="row mt-5 g-4" id="servicios">
-    <div class="col-12">
-      <h3 class="mb-3">Nuestros Servicios</h3>
-      <p class="text-muted">
-        Brindamos soporte técnico integral adaptado a las necesidades de tu empresa y tus procesos operativos.
-      </p>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Mesa de ayuda y gestión de tickets</h5>
-          <p class="card-text text-muted">
-            Registro, clasificación y seguimiento de incidencias en tiempo real.  
-            Panel especializado para usuarios y administradores.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Soporte remoto y en sitio</h5>
-          <p class="card-text text-muted">
-            Atención inmediata para usuarios, equipos de oficina, puntos de venta,
-            redes y servidores.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-          <h5 class="card-title">Monitoreo preventivo</h5>
-          <p class="card-text text-muted">
-            Supervisión continua de tu infraestructura TI para reducir caídas y fallos críticos.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sección de SLA -->
-  <div class="row mt-5">
-    <div class="col-12">
-      <div class="p-4 rounded-3 bg-light d-flex flex-wrap justify-content-between align-items-center">
-        <div>
-          <h5 class="mb-1">Compromiso con la continuidad del servicio</h5>
-          <p class="mb-0 text-muted">
-            Acuerdos de Nivel de Servicio (SLA), tiempos de respuesta garantizados y reportes periódicos.
-          </p>
-        </div>
-        <a href="#" class="btn btn-outline-primary mt-3 mt-md-0">
-          Solicitar información comercial
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
+  </section>
+</main>
 {% endblock %}
