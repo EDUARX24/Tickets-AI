@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block title %}Registrar Colaborador{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded p-4 shadow-sm">
+
+                <h5 class="mb-4 text-primary fw-bold">
+                    <i class="fa fa-user-plus"></i> Registrar nuevo colaborador
+                </h5>
+
+                <!-- IMPORTANTE: form apunta a la MISMA ruta (GET/POST) -->
+                <form method="POST" action="{{ url_for('client_admin.create_company_user') }}">
+
+                    <div class="row g-3">
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Correo electrónico *</label>
+                            <input type="email" name="email" class="form-control" 
+                                   placeholder="correo@empresa.com" required>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Número telefónico</label>
+                            <input type="text" name="phoneNumber" class="form-control" 
+                                   placeholder="8888-8888">
+                        </div>
+
+                        <!-- Usuario interno -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Usuario interno *</label>
+                            <input type="text" name="username_company" class="form-control"
+                                   placeholder="Identificador del colaborador" required>
+                        </div>
+
+                        <!-- Rol -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Rol del colaborador *</label>
+                            <select name="role" class="form-select" required>
+                                <option value="" disabled selected>Seleccionar un rol</option>
+                                <option value="admin_op">admin_op</option>
+                            </select>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Contraseña *</label>
+                            <input type="password" name="password" class="form-control" 
+                                   placeholder="********" required>
+                        </div>
+
+                        <!-- Imagen -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Foto (URL opcional)</label>
+                            <input type="url" name="imageSelfieUrl" class="form-control"
+                                   placeholder="https://servidor.com/foto.png">
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="col-md-12">
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" id="statusSwitch" 
+                                       name="is_activate" checked>
+                                <label class="form-check-label fw-bold" for="statusSwitch">
+                                    Activar usuario inmediatamente
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="d-flex justify-content-end mt-4">
+
+                        <!-- Cancelar: vuelve a la MISMA vista -->
+                        <a href="{{ url_for('client_admin.create_company_user') }}"
+                           class="btn btn-outline-secondary me-2">
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fa fa-save"></i> Guardar colaborador
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

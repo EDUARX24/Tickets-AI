@@ -2,6 +2,9 @@
 from flask import Blueprint, render_template, session, redirect, url_for,request, flash
 from app import supabase
 from datetime import datetime
+from werkzeug.security import (
+    generate_password_hash, check_password_hash
+)
 
 #blueprint para los clientes administradores
 client_admin_bp = Blueprint("client_admin", __name__)
@@ -139,3 +142,72 @@ def home_client_admin():
         return render_template("notification.html", data=data)
 
     return render_template("clients/homeClients.html")
+
+#endpoint para crear usuarios de compañia
+@client_admin_bp.route("/client_admin/users", methods=["GET", "POST"])
+def create_company_user():
+    if "company_id" not in session:
+        flash("No tienes una compañía asociada.", "danger")
+        return redirect(url_for("auth.login"))
+
+    company_id = session["company_id"]
+
+    # GET → mostrar formulario
+    if request.method == "GET":
+        return render_template("clients/createCompanyUser.html")
+
+    # POST → procesar formulario
+    form = request.form
+
+    if not form.get("email") or not form.get("password") or not form.get("username_company"):
+        # sweetalert puede usarse aquí también
+        data = {
+            "icon": "error",
+            "title": "Datos incompletos",
+            "text": "Correo, usuario interno y contraseña son obligatorios.",
+            "redirect": url_for("client_admin.create_company_user"),
+        }
+        return render_template("notification.html", data=data)
+
+    payload = {
+        "email": form.get("email"),
+        "password": generate_password_hash(form.get("password")),
+        "role": form.get("role"),
+        "is_activate": True if form.get("is_activate") == "on" else False,
+        "imageSelfieUrl": form.get("imageSelfieUrl") or None,
+        "phoneNumber": form.get("phoneNumber") or None,
+        "username_company": form.get("username_company"),
+        "Id_company": company_id,# ✅ NOMBRE REAL DE LA COLUMNA
+        "created_at": datetime.utcnow().isoformat()
+    }
+
+    print("Creating company user payload:", payload)
+
+    try:
+        resp = supabase.table("company_users").insert(payload).execute()
+        if resp.data:
+            data = {
+                "icon": "success",
+                "title": "Colaborador registrado",
+                "text": "El colaborador se registró correctamente.",
+                "redirect": url_for("client_admin.create_company_user"),
+            }
+            return render_template("notification.html", data=data)
+
+        data = {
+            "icon": "error",
+            "title": "No se pudo registrar el colaborador",
+            "text": "Inténtalo nuevamente.",
+            "redirect": url_for("client_admin.create_company_user"),
+        }
+        return render_template("notification.html", data=data)
+
+    except Exception as e:
+        print("Error al crear usuario:", e)
+        data = {
+            "icon": "error",
+            "title": "Error",
+            "text": "Error al registrar colaborador.",
+            "redirect": url_for("client_admin.create_company_user"),
+        }
+        return render_template("notification.html", data=data)
