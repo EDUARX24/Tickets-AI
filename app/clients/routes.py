@@ -3,12 +3,8 @@ from flask import Blueprint, render_template, session, redirect, url_for,request
 from app import supabase
 from datetime import datetime
 
-
 #blueprint para los clientes administradores
 client_admin_bp = Blueprint("client_admin", __name__)
-@client_admin_bp.route("/client-admin")
-def home_client_admin():
-    return render_template("clients/homeClients.html") 
 
 @client_admin_bp.route("/company/create", methods=["GET", "POST"])
 def create_company():
@@ -17,12 +13,22 @@ def create_company():
     #    y con rol admin_cliente
     # ─────────────────────────────────────────────
     if "user_id" not in session:
-        flash("Debes iniciar sesión para continuar.", "warning")
-        return redirect(url_for("auth.login"))
+        data = {
+            "icon": "warning",
+            "title": "Sesión requerida",
+            "text": "Debes iniciar sesión para registrar una compañía.",
+            "redirect": url_for("auth.login"),
+        }
+        return render_template("notification.html", data=data)
 
     if session.get("role") != "admin_cliente":
-        flash("No tienes permisos para registrar una compañía.", "danger")
-        return redirect(url_for("main.index"))
+        data = {
+            "icon": "error",
+            "title": "Acceso denegado",
+            "text": "No tienes permisos para registrar una compañía.",
+            "redirect": url_for("main.index"),
+        }
+        return render_template("notification.html", data=data)
 
     # ─────────────────────────────────────────────
     # 2. Método GET → solo mostrar el formulario
@@ -52,16 +58,21 @@ def create_company():
         "webSite":        form.get("webSite") or None,
         "imageUrl":       form.get("imageUrl") or None,
         "status":         status_value,
-        "id_username":    user_id,                             # FK hacia users.username_id
-        "created_at":     datetime.utcnow().isoformat(),       # opcional si la tabla no lo autogenera
+        "id_username":    user_id,
+        "created_at":     datetime.utcnow().isoformat(),
     }
-    #print de todo el payload en una línea para debug
+
     print("Creating company with payload:", payload)
 
     # Validación mínima: nombre legal obligatorio
     if not payload["name"]:
-        flash("El nombre legal de la compañía es obligatorio.", "danger")
-        return redirect(url_for("client_admin.create_company"))
+        data = {
+            "icon": "error",
+            "title": "Datos incompletos",
+            "text": "El nombre legal de la compañía es obligatorio.",
+            "redirect": url_for("client_admin.create_company"),
+        }
+        return render_template("notification.html", data=data)
 
     try:
         resp = (
@@ -72,17 +83,32 @@ def create_company():
         )
     except Exception as e:
         print("Error al crear compañía en Supabase:", e)
-        flash("Ocurrió un error al registrar la compañía. Inténtalo de nuevo.", "danger")
-        return redirect(url_for("client_admin.create_company"))
+        data = {
+            "icon": "error",
+            "title": "Error al guardar",
+            "text": "Ocurrió un error al registrar la compañía. Inténtalo de nuevo.",
+            "redirect": url_for("client_admin.create_company"),
+        }
+        return render_template("notification.html", data=data)
 
     # Si Supabase devolvió la fila creada
     if resp.data:
         company = resp.data[0]
-        # guarda el company_id en la sesión
         session["company_id"] = company.get("company_id")
-        flash("Compañía registrada correctamente.", "success")
-        return redirect(url_for("client_admin.home_client_admin"))
+
+        data = {
+            "icon": "success",
+            "title": "Compañía registrada",
+            "text": "La compañía se registró correctamente.",
+            "redirect": url_for("client_admin.home_client_admin"),
+        }
+        return render_template("notification.html", data=data)
 
     # Por si no regresara datos
-    flash("No se pudo guardar la compañía. Inténtalo nuevamente.", "danger")
-    return redirect(url_for("client_admin.create_company"))
+    data = {
+        "icon": "error",
+        "title": "No se guardó la compañía",
+        "text": "No se pudo guardar la compañía. Inténtalo nuevamente.",
+        "redirect": url_for("client_admin.create_company"),
+    }
+    return render_template("notification.html", data=data)

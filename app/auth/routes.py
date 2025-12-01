@@ -33,9 +33,13 @@ def register():
             return render_template("notification.html", data=data)
 
         if supabase is None:
-            flash("Error interno con Supabase", "danger")
-            return redirect(url_for("auth.register"))
-
+            data = {
+                'icon': 'error',
+                'title': 'Error',
+                'text': 'Error interno con Supabase',
+                'redirect': url_for('auth.register')
+            }
+            return render_template("notification.html", data=data)
         # Verificar usuario existente (puedes ajustar columnas)
         existing_user = (
             supabase.table("users")
@@ -45,8 +49,13 @@ def register():
         )
 
         if existing_user.data:
-            flash("Username or email already exists", "danger")
-            return redirect(url_for("auth.register"))
+            data = {
+            'icon': 'error',
+            'title': 'Usuario o email ya existe',
+            'text': 'Elige otro usuario o email',
+            'redirect': url_for('auth.register')  
+            }
+            return render_template("notification.html", data=data)
 
         # Crear usuario
         hashed_password = generate_password_hash(password)
@@ -58,10 +67,13 @@ def register():
         }
 
         supabase.table("users").insert(new_user).execute()
-
-        flash("Account created successfully! Please log in.", "success")
-        return redirect(url_for("auth.login"))
-
+        data = {
+                'icon': 'success',
+                'title': 'Cuenta Registrada',
+                'text': '¡Cuenta creada correctamente! Inicia sesión.',
+                'redirect': url_for('auth.login')
+            }
+        return render_template("notification.html", data=data)
     return render_template("auth/register.html",active_page="register")
 
 
@@ -73,12 +85,23 @@ def login():
 
         # validar campos vacíos
         if not email or not password:
-            flash("Please fill out all fields", "danger")
-            return redirect(url_for("auth.login"))
+            data = {
+                'icon': 'error',
+                'title': 'Error de Autenticación',
+                'text': 'Debe ingresar correo y contraseña.',
+                'redirect': url_for('auth.login')
+            }
+            return render_template("notification.html", data=data)
 
+        # Verificar supabase
         if supabase is None:
-            flash("Error interno con Supabase", "danger")
-            return redirect(url_for("auth.login"))
+            data = {
+                'icon': 'error',
+                'title': 'Error',
+                'text': 'Error interno con Supabase',
+                'redirect': url_for('auth.login')
+            }
+            return render_template("notification.html", data=data)
 
         # Fetch user
         user_response = (
@@ -91,56 +114,77 @@ def login():
 
         # Validar credenciales
         if user and check_password_hash(user["password"], password):
+
             # guardar datos en sesión
             session["user_id"] = user.get("username_id") or user.get("id")
             session["email"] = user["email"]
             session["role"] = user["role"]
+
             print(f"User role: {session['role']}")
 
-            flash("Logged in successfully!", "success")
+            # ─────────────────────────────────────────────
+            # SweetAlert: LOGIN EXITOSO
+            # ─────────────────────────────────────────────
+            success_data = {
+                'icon': 'success',
+                'title': '¡Bienvenido!',
+                'text': 'Inicio de sesión exitoso.',
+            }
 
             # ─────────────────────────────────────────────
-            # ROL: sysAdmin  → home de admin general
+            # ROL: sysAdmin  
             # ─────────────────────────────────────────────
             if user["role"] == "sysAdmin":
-                return redirect(url_for("admin.home_admin"))
+                success_data['redirect'] = url_for("admin.home_admin")
+                return render_template("notification.html", data=success_data)
 
             # ─────────────────────────────────────────────
-            # ROL: admin_cliente → validar compañía
+            # ROL: admin_cliente  
             # ─────────────────────────────────────────────
             elif user["role"] == "admin_cliente":
                 user_id = session["user_id"]
 
-                # 1) Buscar si ya tiene compañía asociada
                 company_resp = (
                     supabase.table("company")
                     .select("company_id")
-                    .eq("id_username", user_id)   # FK hacia users
+                    .eq("id_username", user_id)
                     .execute()
                 )
 
                 if company_resp.data:
-                    # Ya tiene compañía, guardar en sesión
                     company_id = company_resp.data[0]["company_id"]
                     session["company_id"] = company_id
-                    return redirect(url_for("client_admin.home_client_admin"))
+
+                    success_data['redirect'] = url_for("client_admin.home_client_admin")
+                    return render_template("notification.html", data=success_data)
+
                 else:
-                    # NO tiene compañía → mandarlo al formulario de creación
-                    flash("Debes registrar la compañía para continuar.", "info")
-                    return redirect(url_for("client_admin.create_company"))
+                    data = {
+                        'icon': 'info',
+                        'title': 'Registrar Compañía',
+                        'text': 'Debes registrar la compañía para continuar.',
+                        'redirect': url_for('client_admin.create_company')
+                    }
+                    return render_template("notification.html", data=data)
 
             # ─────────────────────────────────────────────
-            # Otros roles → home general
+            # Otros roles  
             # ─────────────────────────────────────────────
             else:
-                return redirect(url_for("main.index"))
+                success_data['redirect'] = url_for("main.index")
+                return render_template("notification.html", data=success_data)
 
-        # Si credenciales inválidas
-        flash("Invalid email or password", "danger")
-        return redirect(url_for("auth.login"))
+        # Credenciales incorrectas
+        data = {
+            'icon': 'error',
+            'title': 'Error de Autenticación',
+            'text': 'Usuario o contraseña incorrectos.',
+            'redirect': url_for('auth.login')
+        }
+        return render_template("notification.html", data=data)
 
-    # GET
     return render_template("auth/login.html", active_page="login")
+
 
 
 
