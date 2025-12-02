@@ -140,8 +140,8 @@ def home_client_admin():
             "redirect": url_for("main.index"),
         }
         return render_template("notification.html", data=data)
-
-    return render_template("clients/admin-op-index.html")
+    
+    return render_template("clients/homeClients.html")
 
 #endpoint para crear usuarios de compañia
 @client_admin_bp.route("/client_admin/users", methods=["GET", "POST"])
