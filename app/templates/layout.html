@@ -117,20 +117,20 @@
                 class="nav-link dropdown-toggle {% if active_page in ['login', 'register'] %}active{% endif %}"
                 data-bs-toggle="dropdown"
               >
-                <i class="bi bi-fingerprint"></i>Auth
+                <i class="bi bi-fingerprint"></i>Acceso
               </a>
               <div class="dropdown-menu bg-transparent border-0">
                 <a
                   href="{{ url_for('auth.login') }}"
                   class="dropdown-item {% if active_page == 'login' %}active{% endif %}"
                 >
-                  Sign In
+                  Iniciar sesión
                 </a>
                 <a
                   href="{{ url_for('auth.register') }}"
                   class="dropdown-item {% if active_page == 'register' %}active{% endif %}"
                 >
-                  Sign Up
+                  Registrarse
                 </a>
               </div>
             </div>

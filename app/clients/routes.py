@@ -141,7 +141,7 @@ def home_client_admin():
         }
         return render_template("notification.html", data=data)
 
-    return render_template("clients/homeClients.html")
+    return render_template("clients/admin-op-index.html")
 
 #endpoint para crear usuarios de compañia
 @client_admin_bp.route("/client_admin/users", methods=["GET", "POST"])
