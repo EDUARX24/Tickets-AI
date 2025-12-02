@@ -166,7 +166,12 @@ def login():
                         'redirect': url_for('client_admin.create_company')
                     }
                     return render_template("notification.html", data=data)
-
+            # ─────────────────────────────────────────────
+            # ROL: sysAdmin  
+            # ─────────────────────────────────────────────
+            elif user["role"] == "admin_tech":
+                success_data['redirect'] = url_for("admin.tech_dashboard")
+                return render_template("notification.html", data=success_data)
             # ─────────────────────────────────────────────
             # Otros roles  
             # ─────────────────────────────────────────────
@@ -187,7 +192,7 @@ def login():
 
 
 
-
+#ENDPoint for logout
 @auth_bp.route("/logout")
 def logout():
     session.clear()

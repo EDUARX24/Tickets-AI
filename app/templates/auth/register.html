@@ -5,7 +5,7 @@
 
 <style>
   .auth-wrapper {
-    min-height: 90vh;
+    min-height: 80vh;
   }
 
   .auth-card {
@@ -15,15 +15,14 @@
 </style>
 
 <div class="container-fluid auth-wrapper d-flex align-items-center justify-content-center">
-  <div class="col-11 col-sm-8 col-md-6 col-lg-4 col-xl-4">
-
+  <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-5">
     <form method="post" action="{{ url_for('auth.register') }}">
-      <div class="bg-light auth-card p-4 p-sm-5 my-4">
+      <div class="bg-light auth-card p-3 p-sm-5 my-1">
 
         <!-- Encabezado centrado -->
-        <div class="text-center mb-4">
+        <div class="text-center mb-2">
           <div class="d-inline-flex align-items-center mb-2">
-            <i class="fa fa-hashtag me-2 text-primary fs-4"></i>
+            <i class="fa fa-hashtag me-1 text-primary fs-2"></i>
             <span class="h4 mb-0 text-primary fw-bold">IT MultiService TX</span>
           </div>
 
@@ -50,7 +49,7 @@
         </div>
 
         <!-- Recuérdame + Olvidó contraseña -->
-        <div class="d-flex align-items-center justify-content-between gap-3 mb-4">
+        <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
           <div class="form-check d-flex align-items-center gap-2">
             <input type="checkbox" class="form-check-input" id="exampleCheck1">
             <label class="form-check-label" for="exampleCheck1">Recuérdame</label>
@@ -72,8 +71,6 @@
 
       </div>
     </form>
-
   </div>
 </div>
-
 {% endblock %}

@@ -1,5 +1,5 @@
 # app/admin/routes.py
-from flask import Blueprint, render_template, session, redirect, url_for,request, flash
+from flask import Blueprint, app, render_template, session, redirect, url_for,request, flash
 from app import supabase
 from datetime import datetime
 from werkzeug.security import (
@@ -211,3 +211,12 @@ def create_company_user():
             "redirect": url_for("client_admin.create_company_user"),
         }
         return render_template("notification.html", data=data)
+    
+#EndPoint para probar supabase
+@client_admin_bp.route("/client_admin/test-supabase")
+def test_supabase():
+    data = {"name": "Prueba desde Flask", "is_active": True}
+    resp = supabase.table("category").insert(data).execute()
+    print(resp)
+    return "OK"
+    
