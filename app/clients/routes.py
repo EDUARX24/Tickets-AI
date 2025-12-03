@@ -307,11 +307,47 @@ def choose_create_ticket():
 
 @client_admin_bp.route("/client_admin/tickets/manual", methods=["GET"])
 def create_ticket_manual():
-    # Por ahora solo una página de "en construcción"
-    return "<h1>Formulario de ticket manual (en construcción)</h1>"
+    # Validaciones básicas de sesión/rol
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+
+    if session.get("role") not in ["admin_cliente", "admin_op"]:
+        return redirect(url_for("main.index"))
+
+    # Obtener categorías desde Supabase
+    try:
+        resp_cat = supabase.table("category").select("*").execute()
+        categories = resp_cat.data or []
+    except:
+        categories = []
+
+    # Obtener prioridades desde Supabase
+    try:
+        resp_pri = supabase.table("priority").select("*").order("sort_order").execute()
+        priorities = resp_pri.data or []
+    except:
+        priorities = []
+
+    return render_template(
+        "clients/createTicketManual.html",
+        categories=categories,
+        priorities=priorities,
+        active_page="create_ticket_manual"
+    )
 
 @client_admin_bp.route("/client_admin/tickets/ia", methods=["GET"])
 def create_ticket_ai():
-    return "<h1>Formulario de ticket con IA (en construcción)</h1>"
+    # Proteger la ruta (mismo criterio que el ticket manual)
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+
+    if session.get("role") not in ["admin_cliente", "admin_op"]:
+        return redirect(url_for("main.index"))
+
+    return render_template(
+        "clients/createTicketAI.html",
+        active_page="create_ticket_ai"
+    )
+
 
 

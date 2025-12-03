@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block title %}Crear ticket con IA{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4" style="background-color:#f5f6fa; min-height: 100vh;">
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+
+      <!-- Encabezado -->
+      <div class="rounded p-4 shadow-sm mb-4"
+           style="background: linear-gradient(135deg, #e8f5e9, #f1fff5);">
+        <h5 class="mb-1 text-success fw-bold">
+          <i class="bi bi-stars me-2"></i> Crear ticket con IA
+        </h5>
+        <p class="mb-0 text-muted">
+          Escribe libremente el problema y, en la siguiente fase, la IA se encargará de
+          proponer el título, la categoría y la prioridad del ticket.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Zona de entrada -->
+        <div class="col-lg-8">
+          <div class="bg-white rounded p-4 shadow-sm">
+
+            <!-- Por ahora el formulario es solo visual, no hace POST real -->
+            <form action="#" method="post">
+
+              <!-- Descripción libre -->
+              <div class="mb-3">
+                <label for="ia_description" class="form-label fw-semibold">
+                  Describe el incidente <span class="text-danger">*</span>
+                </label>
+                <textarea
+                  id="ia_description"
+                  name="ia_description"
+                  class="form-control"
+                  rows="8"
+                  placeholder="Ejemplo: Desde hoy en la mañana las PCs de caja no se conectan al sistema de facturación. El resto de la oficina sí tiene internet. Ya reiniciamos el router y los equipos, pero sigue igual..."
+                  required
+                ></textarea>
+              </div>
+
+              <!-- Campo opcional de contexto -->
+              <div class="mb-3">
+                <label for="extra_context" class="form-label fw-semibold">
+                  Información adicional (opcional)
+                </label>
+                <textarea
+                  id="extra_context"
+                  name="extra_context"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Ejemplo: Sucursal, número de equipos afectados, código de error, cambios recientes, etc."
+                ></textarea>
+              </div>
+
+              <!-- Nota de estado -->
+              <div class="alert alert-success small" role="alert">
+                <i class="bi bi-info-circle me-1"></i>
+                En esta versión, la descripción se utiliza solo como ejemplo visual.
+                La lógica de IA y el guardado del ticket se implementarán en la siguiente fase.
+              </div>
+
+              <!-- Botones -->
+              <div class="d-flex justify-content-between mt-4">
+                <a href="{{ url_for('client_admin.home_client_admin') }}"
+                   class="btn btn-outline-secondary">
+                  Volver
+                </a>
+                <button type="button" class="btn btn-success">
+                  Analizar con IA (próximamente)
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Panel lateral: vista previa / ayuda -->
+        <div class="col-lg-4">
+          <div class="bg-white rounded p-4 shadow-sm mb-3">
+            <h6 class="fw-semibold mb-2">
+              <i class="bi bi-eye me-1 text-success"></i> Vista previa del ticket
+            </h6>
+            <p class="small text-muted mb-1">
+              Así podría verse el ticket que la IA generará a partir de tu descripción:
+            </p>
+            <div class="border rounded p-3 small">
+              <p class="mb-1 text-muted">Título sugerido</p>
+              <p class="fw-semibold mb-2">[Generado por IA]</p>
+
+              <p class="mb-1 text-muted">Categoría sugerida</p>
+              <span class="badge bg-primary-subtle text-primary mb-2">[Categoría IA]</span>
+
+              <p class="mb-1 text-muted">Prioridad sugerida</p>
+              <span class="badge bg-danger-subtle text-danger mb-2">[Prioridad IA]</span>
+
+              <p class="mb-1 text-muted">Resumen</p>
+              <p class="text-muted mb-0">
+                [Resumen breve que se generará automáticamente con base en tu descripción.]
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white rounded p-4 shadow-sm">
+            <h6 class="fw-semibold mb-2">
+              <i class="bi bi-lightbulb me-1 text-warning"></i> Consejos para mejores resultados
+            </h6>
+            <ul class="small text-muted ps-3 mb-0">
+              <li>Menciona el sistema o equipo afectado (PC, impresora, servidor, etc.).</li>
+              <li>Indica si afecta a un usuario o a toda un área.</li>
+              <li>Incluye mensajes de error o comportamientos raros.</li>
+              <li>Indica desde cuándo ocurre el problema.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -8,82 +8,65 @@
             <div class="bg-light rounded h-100 p-1">
                 <form method="POST" action="{{ url_for('client_admin.create_company') }}">
                     <div class="row g-4">
+
                         <!-- Columna izquierda -->
                         <div class="col-md-6">
-                            <h6 class="fw-bold text-secondary mb-3">
-                                Datos generales
-                            </h6>
+                            <h6 class="fw-bold text-secondary mb-3">Datos generales</h6>
 
                             <!-- name -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Nombre legal *</label>
-                                <input type="text"
-                                       name="name"
-                                       class="form-control"
-                                       placeholder="Nombre registrado en documentos legales"
+                                <input type="text" name="name" class="form-control"
+                                       placeholder="Tech Solutions LLC"
                                        required>
                             </div>
 
                             <!-- commercialName -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Nombre comercial</label>
-                                <input type="text"
-                                       name="commercialName"
-                                       class="form-control"
-                                       placeholder="Nombre con el que te conocen los clientes">
+                                <input type="text" name="commercialName" class="form-control"
+                                       placeholder="Tech Solutions">
                             </div>
 
                             <!-- businessName -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Giro o razón de negocio</label>
-                                <input type="text"
-                                       name="businessName"
-                                       class="form-control"
-                                       placeholder="Ej. Soporte técnico, Desarrollo de software, etc.">
+                                <input type="text" name="businessName" class="form-control"
+                                       placeholder="IT Support & Consulting Services">
                             </div>
 
                             <!-- addressPrimary -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Dirección principal</label>
-                                <textarea name="addressPrimary"
-                                          class="form-control"
-                                          rows="3"
-                                          placeholder="Dirección fiscal / principal de la compañía"></textarea>
+                                <textarea name="addressPrimary" class="form-control" rows="3"
+                                          placeholder="742 Evergreen Terrace, Springfield, IL 62704"></textarea>
                             </div>
                         </div>
 
                         <!-- Columna derecha -->
                         <div class="col-md-6">
-                            <h6 class="fw-bold text-secondary mb-3">
-                                Contacto y ubicación
-                            </h6>
+                            <h6 class="fw-bold text-secondary mb-3">Contacto y ubicación</h6>
 
                             <div class="row g-3">
                                 <!-- countryCode -->
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Código país</label>
-                                    <input type="text"
-                                           name="countryCode"
-                                           class="form-control"
-                                           value="+505">
+                                    <input type="text" name="countryCode" class="form-control"
+                                           value="+1">
                                 </div>
 
                                 <!-- countryNumber -->
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Prefijo numérico</label>
-                                    <input type="text"
-                                           name="countryNumber"
-                                           class="form-control"
-                                           value="505">
+                                    <input type="text" name="countryNumber" class="form-control"
+                                           value="1">
                                 </div>
 
                                 <!-- phoneNumber -->
                                 <div class="col-md-4">
                                     <label class="form-label fw-bold">Teléfono</label>
-                                    <input type="text"
-                                           name="phoneNumber"
-                                           class="form-control"
-                                           placeholder="8888-8888">
+                                    <input type="text" name="phoneNumber" class="form-control"
+                                           placeholder="(415) 555-0133">
                                 </div>
                             </div>
 
@@ -91,38 +74,30 @@
                                 <!-- countryCity -->
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Ciudad</label>
-                                    <input type="text"
-                                           name="countryCity"
-                                           class="form-control"
-                                           placeholder="Managua, León, etc.">
+                                    <input type="text" name="countryCity" class="form-control"
+                                           placeholder="San Francisco">
                                 </div>
 
                                 <!-- stateProvince -->
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Departamento / Provincia</label>
-                                    <input type="text"
-                                           name="stateProvince"
-                                           class="form-control"
-                                           placeholder="Departamento o estado">
+                                    <label class="form-label fw-bold">Estado / Provincia</label>
+                                    <input type="text" name="stateProvince" class="form-control"
+                                           placeholder="California">
                                 </div>
                             </div>
 
                             <!-- webSite -->
                             <div class="mt-3 mb-3">
                                 <label class="form-label fw-bold">Sitio web</label>
-                                <input type="url"
-                                       name="webSite" 
-                                       class="form-control"
-                                       placeholder="https://itmultiservicetx.com">
+                                <input type="url" name="webSite" class="form-control"
+                                       placeholder="https://www.techsolutions.com">
                             </div>
 
                             <!-- imageUrl -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Logo (URL de imagen)</label>
-                                <input type="url"
-                                       name="imageUrl"
-                                       class="form-control"
-                                       placeholder="https://.../logo.png">
+                                <input type="url" name="imageUrl" class="form-control"
+                                       placeholder="https://cdn.company.com/logo.png">
                                 <small class="text-muted">
                                     Puedes dejarlo en blanco y configurarlo más adelante.
                                 </small>
@@ -130,11 +105,8 @@
 
                             <!-- status -->
                             <div class="form-check form-switch mb-3">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       id="statusSwitch"
-                                       name="status"
-                                       checked>
+                                <input class="form-check-input" type="checkbox" id="statusSwitch"
+                                       name="status" checked>
                                 <label class="form-check-label fw-bold" for="statusSwitch">
                                     Compañía activa
                                 </label>
@@ -148,8 +120,9 @@
                                     Guardar compañía
                                 </button>
                             </div>
-                        </div>
-                    </div> <!-- row g-4 -->
+
+                        </div> <!-- columna derecha -->
+                    </div> <!-- row -->
                 </form>
             </div>
         </div>
