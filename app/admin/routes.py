@@ -96,19 +96,28 @@ def admin_users():
     if guard:
         return guard
 
-    resp = (
-        supabase
-        .table("users")
-        .select("*")
-        .execute()
-    )
-    users = resp.data or []
+    try:
+        resp = (
+            supabase
+            .table("users")
+            .select("username_id, username, email, role, created_at")
+            .order("created_at", desc=True)
+            .execute()
+        )
+        users = resp.data or []
+    except Exception as e:
+        print("Error obteniendo usuarios:", e)
+        users = []
+
+    total_users = len(users)
 
     return render_template(
         "admin/usersList.html",
         users=users,
+        total_users=total_users,
         active_page="admin_users",
     )
+
 
 @admin_bp.route("/admin/companies")
 def admin_companies():
