@@ -1,421 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}IT MultiService TX{% endblock %}</title>
 
-    <link
-      href="{{ url_for('static', filename='img/favicon.ico') }}"
-      rel="icon"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}IT MultiService TX{% endblock %}</title>
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" />
 
-    <!-- Icon Font Stylesheet -->
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"> -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-    />
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Libraries Stylesheet -->
-    <link
-      href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}"
-      rel="stylesheet"
-    />
-    <link
-      href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
-      rel="stylesheet"
-    />
+  <!-- Icon Font Stylesheet -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link
-      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
-      rel="stylesheet"
-    />
+  <!-- Libraries Stylesheet -->
+  <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+    rel="stylesheet" />
 
-    <!-- Template Stylesheet -->
-    <link
-      href="{{ url_for('static', filename='css/style.css') }}"
-      rel="stylesheet"
-    />
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
 
-    {% block customCss %}{% endblock %}
-  </head>
+  <!-- Template Stylesheet -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
 
-  <body>
-    <!-- agregar navbar  -->
-    <div class="container-xxl position-relative bg-white d-flex p-0">
-      <!-- Spinner Start -->
-      <div
-        id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center"
-      >
-        <div
-          class="spinner-border text-primary"
-          style="width: 3rem; height: 3rem"
-          role="status"
-        >
-          <span class="sr-only">Loading...</span>
-        </div>
+  {% block customCss %}{% endblock %}
+</head>
+
+<body>
+  <!-- agregar navbar  -->
+  <div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Spinner Start -->
+    <div id="spinner"
+      class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem" role="status">
+        <span class="sr-only">Loading...</span>
       </div>
-      <!-- Spinner End -->
+    </div>
+    <!-- Spinner End -->
 
-      <!-- Sidebar Start -->
-      <div class="sidebar pe-4 pb-3">
-        <nav class="navbar bg-light navbar-light">
-          <!-- Logo -->
-          <a href="{{ url_for('main.index') }}" class="navbar-brand mx-4 mb-3">
-            <h3 class="text-primary">
-              <i class="fa fa-hashtag me-2"></i>DASHMIN
-            </h3>
-          </a>
+    <!-- Sidebar Start -->
+    <div class="sidebar pe-4 pb-3">
+      <nav class="navbar bg-light navbar-light">
+        <!-- Logo -->
+        <a href="{{ url_for('main.index') }}" class="navbar-brand mx-4 mb-3">
+          <h3 class="text-primary">
+            <i class="fa fa-hashtag me-2"></i>DASHMIN
+          </h3>
+        </a>
 
-          <!-- Info de usuario (solo si está logueado) -->
-          {% if session.get('user_id') %}
-          <div class="d-flex align-items-center ms-4 mb-4">
-            <div class="position-relative">
-              <img
-                class="rounded-circle"
-                src="{{ url_for('static', filename='img/ITMULTI.jpg') }}"
-                style="width: 40px; height: 40px"
-              />
-              <div
-                class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"
-              ></div>
-            </div>
-            <div class="ms-3">
-              <h6 class="mb-0">{{ session.get('username', 'Usuario') }}</h6>
-              <span>{{ session.get('role') }}</span>
+        <!-- Info de usuario (solo si está logueado) -->
+        {% if session.get('user_id') %}
+        <div class="d-flex align-items-center ms-4 mb-4">
+          <div class="position-relative">
+            <img class="rounded-circle" src="{{ url_for('static', filename='img/ITMULTI.jpg') }}"
+              style="width: 40px; height: 40px" />
+            <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1">
             </div>
           </div>
-          {% endif %}
+          <div class="ms-3">
+            <h6 class="mb-0">{{ session.get('username', 'Usuario') }}</h6>
+            <span>{{ session.get('role') }}</span>
+          </div>
+        </div>
+        {% endif %}
 
-          <!-- Menu -->
-          <div class="navbar-nav w-100">
-            {% if not session.get('user_id') %}
-            <!-- ============================
+        <!-- Menu -->
+        <div class="navbar-nav w-100">
+          {% if not session.get('user_id') %}
+          <!-- ============================
            USUARIO NO LOGUEADO
            ============================ -->
-            <!-- Inicio general -->
-            <a
-              href="{{ url_for('main.index') }}"
-              class="nav-item nav-link {% if active_page == 'dashboard' %}active{% endif %}"
-            >
-              <i class="fa fa-tachometer-alt me-2"></i>Inicio
-            </a>
+          <!-- Inicio general -->
+          <a href="{{ url_for('main.index') }}"
+            class="nav-item nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+            <i class="fa fa-tachometer-alt me-2"></i>Inicio
+          </a>
 
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle {% if active_page in ['login', 'register'] %}active{% endif %}"
-                data-bs-toggle="dropdown"
-              >
-                <i class="bi bi-fingerprint"></i>Acceso
+          <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle {% if active_page in ['login', 'register'] %}active{% endif %}"
+              data-bs-toggle="dropdown">
+              <i class="bi bi-fingerprint"></i>Acceso
+            </a>
+            <div class="dropdown-menu bg-transparent border-0">
+              <a href="{{ url_for('auth.login') }}"
+                class="dropdown-item {% if active_page == 'login' %}active{% endif %}">
+                Iniciar sesión
               </a>
-              <div class="dropdown-menu bg-transparent border-0">
-                <a
-                  href="{{ url_for('auth.login') }}"
-                  class="dropdown-item {% if active_page == 'login' %}active{% endif %}"
-                >
-                  Iniciar sesión
-                </a>
-                <a
-                  href="{{ url_for('auth.register') }}"
-                  class="dropdown-item {% if active_page == 'register' %}active{% endif %}"
-                >
-                  Registrarse
-                </a>
-              </div>
+              <a href="{{ url_for('auth.register') }}"
+                class="dropdown-item {% if active_page == 'register' %}active{% endif %}">
+                Registrarse
+              </a>
             </div>
-            <!-- ============================
+          </div>
+          <!-- ============================
    USUARIO LOGUEADO
    ============================ -->
-            {% else %}
+          {% else %}
 
-            <!-- Menú según el rol -->
-            {% if session.get('role') == 'sysAdmin' %}
-            <!-- SYSADMIN: ve todo el sistema -->
-            <a
-              href="{{ url_for('admin.home_admin') }}"
-              class="nav-item nav-link {% if active_page == 'admin_home' %}active{% endif %}"
-            >
-              <i class="fa fa-user-shield me-2"></i>Panel SysAdmin
-            </a>
-
-            <a
-              href="{{ url_for('admin.admin_tickets') }}"
-              class="nav-item nav-link {% if active_page == 'admin_tickets' %}active{% endif %}"
-            >
-              <i class="bi bi-ticket-perforated me-2"></i>Tickets
-            </a>
-
-            <a
-              href="{{ url_for('admin.admin_users') }}"
-              class="nav-item nav-link {% if active_page == 'admin_users' %}active{% endif %}"
-            >
-              <i class="bi bi-people me-2"></i>Usuarios
-            </a>
-
-            <a
-              href="{{ url_for('admin.admin_companies') }}"
-              class="nav-item nav-link {% if active_page == 'admin_companies' %}active{% endif %}"
-            >
-              <i class="bi bi-buildings me-2"></i>Compañías
-            </a>
-
-            {% elif session.get('role') == 'admin_tech' %}
-            <!-- TÉCNICO: panel interno de soporte -->
-            <a
-              href="{{ url_for('admin.tech_dashboard') }}"
-              class="nav-item nav-link {% if active_page == 'tech_dashboard' %}active{% endif %}"
-            >
-              <i class="fa fa-tools me-2"></i>Panel técnico
-            </a>
-
-            {% elif session.get('role') == 'admin_cliente' %}
-            <!-- ADMIN CLIENTE: panel de empresa y gestión de usuarios -->
-            <a
-              href="{{ url_for('client_admin.home_client_admin') }}"
-              class="nav-item nav-link {% if active_page == 'client_dashboard' %}active{% endif %}"
-            >
-              <i class="fa fa-building me-2"></i>Panel de cliente
-            </a>
-            <!-- vista de los tickets de su empresa -->
-            <a
-              href="{{ url_for('client_admin.company_tickets') }}"
-              class="nav-item nav-link {% if active_page == 'company_tickets' %}active{% endif %}"
-            >
-              <i class="bi bi-ticket-perforated"></i> Tickets
-            </a>
-            <a
-              href="{{ url_for('client_admin.create_company') }}"
-              class="nav-item nav-link {% if active_page == 'create_company' %}active{% endif %}"
-            >
-              <i class="bi bi-building-fill-add"></i> Crear empresa
-            </a>
-            <a
-              href="{{ url_for('client_admin.create_company_user') }}"
-              class="nav-item nav-link {% if active_page == 'create_company_user' %}active{% endif %}"
-            >
-              <i class="bi bi-people me-2"></i>Usuarios OP
-            </a>
-
-            {% elif session.get('role') == 'admin_op' %}
-            <!-- OPERATIVO CLIENTE: solo sus tickets -->
-            <a
-              href="#"
-              class="nav-item nav-link {% if active_page == 'op_dashboard' %}active{% endif %}"
-            >
-              <i class="bi bi-ticket-perforated me-2"></i>Mis tickets
-            </a>
-            <a
-              href="#"
-              class="nav-item nav-link {% if active_page == 'op_new_ticket' %}active{% endif %}"
-            >
-              <i class="bi bi-plus-circle me-2"></i>Nuevo ticket
-            </a>
-            {% endif %}
-
-            <!-- Cerrar sesión -->
-            <a href="{{ url_for('auth.logout') }}" class="nav-item nav-link">
-              <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-            </a>
-
-            {% endif %}
-          </div>
-        </nav>
-      </div>
-
-      <!-- Sidebar End -->
-
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <nav
-          class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0"
-        >
-          <a
-            href="{{ url_for('main.index') }}"
-            class="navbar-brand d-flex d-lg-none me-4"
-          >
-            <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+          <!-- Menú según el rol -->
+          {% if session.get('role') == 'sysAdmin' %}
+          <!-- SYSADMIN: ve todo el sistema -->
+          <a href="{{ url_for('admin.home_admin') }}"
+            class="nav-item nav-link {% if active_page == 'admin_home' %}active{% endif %}">
+            <i class="fa fa-user-shield me-2"></i>Panel SysAdmin
           </a>
-          <a href="#" class="sidebar-toggler flex-shrink-0">
-            <i class="fa fa-bars"></i>
+
+          <a href="{{ url_for('admin.admin_tickets') }}"
+            class="nav-item nav-link {% if active_page == 'admin_tickets' %}active{% endif %}">
+            <i class="bi bi-ticket-perforated me-2"></i>Tickets
           </a>
-          <form class="d-none d-md-flex ms-4">
-            <input
-              class="form-control border-0"
-              type="search"
-              placeholder="Search"
-            />
-          </form>
-          <div class="navbar-nav align-items-center ms-auto">
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                <i class="fa fa-envelope me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">Message</span>
-              </a>
-              <div
-                class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0"
-              >
-                <a href="#" class="dropdown-item">
-                  <div class="d-flex align-items-center">
-                    <img
-                      class="rounded-circle"
-                      src="{{ url_for('static', filename='img/ITMULTI.jpg') }}"
-                      alt=""
-                      style="width: 40px; height: 40px"
-                    />
-                    <div class="ms-2">
-                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                      <small>15 minutes ago</small>
-                    </div>
-                  </div>
-                </a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item">
-                  <div class="d-flex align-items-center">
-                    <img
-                      class="rounded-circle"
-                      src="{{ url_for('static', filename='img/user.jpg') }}"
-                      alt=""
-                      style="width: 40px; height: 40px"
-                    />
-                    <div class="ms-2">
-                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                      <small>15 minutes ago</small>
-                    </div>
-                  </div>
-                </a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item">
-                  <div class="d-flex align-items-center">
-                    <img
-                      class="rounded-circle"
-                      src="{{ url_for('static', filename='img/user.jpg') }}"
-                      alt=""
-                      style="width: 40px; height: 40px"
-                    />
-                    <div class="ms-2">
-                      <h6 class="fw-normal mb-0">Jhon send you a message</h6>
-                      <small>15 minutes ago</small>
-                    </div>
-                  </div>
-                </a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item text-center"
-                  >See all message</a
-                >
-              </div>
-            </div>
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                <i class="fa fa-bell me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">Notificatin</span>
-              </a>
-              <div
-                class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0"
-              >
-                <a href="#" class="dropdown-item">
-                  <h6 class="fw-normal mb-0">Profile updated</h6>
-                  <small>15 minutes ago</small>
-                </a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item">
-                  <h6 class="fw-normal mb-0">New user added</h6>
-                  <small>15 minutes ago</small>
-                </a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item">
-                  <h6 class="fw-normal mb-0">Password changed</h6>
-                  <small>15 minutes ago</small>
-                </a>
-                <hr class="dropdown-divider" />
-                <a href="#" class="dropdown-item text-center"
-                  >See all notifications</a
-                >
-              </div>
-            </div>
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                <img
-                  class="rounded-circle me-lg-2"
-                  src="{{ url_for('static', filename='img/ITMULTI.jpg') }}"
-                  alt=""
-                  style="width: 40px; height: 40px"
-                />
-                <span class="d-none d-lg-inline-flex">John Doe</span>
-              </a>
-              <div
-                class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0"
-              >
-                <a href="#" class="dropdown-item">My Profile</a>
-                <a href="#" class="dropdown-item">Settings</a>
-                <a href="{{ url_for('auth.logout') }}" class="dropdown-item"
-                  >Log Out</a
-                >
-              </div>
+
+          <a href="{{ url_for('admin.admin_users') }}"
+            class="nav-item nav-link {% if active_page == 'admin_users' %}active{% endif %}">
+            <i class="bi bi-people me-2"></i>Usuarios
+          </a>
+
+          <a href="{{ url_for('admin.admin_companies') }}"
+            class="nav-item nav-link {% if active_page == 'admin_companies' %}active{% endif %}">
+            <i class="bi bi-buildings me-2"></i>Compañías
+          </a>
+
+          {% elif session.get('role') == 'admin_tech' %}
+          <!-- TÉCNICO: panel interno de soporte -->
+          <a href="{{ url_for('admin.tech_dashboard') }}"
+            class="nav-item nav-link {% if active_page == 'tech_dashboard' %}active{% endif %}">
+            <i class="fa fa-tools me-2"></i>Panel técnico
+          </a>
+
+          {% elif session.get('role') == 'admin_cliente' %}
+          <!-- ADMIN CLIENTE: panel de empresa y gestión de usuarios -->
+          <a href="{{ url_for('client_admin.home_client_admin') }}"
+            class="nav-item nav-link {% if active_page == 'client_dashboard' %}active{% endif %}">
+            <i class="fa fa-building me-2"></i>Panel de cliente
+          </a>
+          <!-- vista de los tickets de su empresa -->
+          <a href="{{ url_for('client_admin.company_tickets') }}"
+            class="nav-item nav-link {% if active_page == 'company_tickets' %}active{% endif %}">
+            <i class="bi bi-ticket-perforated"></i> Tickets
+          </a>
+          <a href="{{ url_for('client_admin.create_company') }}"
+            class="nav-item nav-link {% if active_page == 'create_company' %}active{% endif %}">
+            <i class="bi bi-building-fill-add"></i> Crear empresa
+          </a>
+          <a href="{{ url_for('client_admin.create_company_user') }}"
+            class="nav-item nav-link {% if active_page == 'create_company_user' %}active{% endif %}">
+            <i class="bi bi-people me-2"></i>Usuarios OP
+          </a>
+
+          {% elif session.get('role') == 'admin_op' %}
+          <!-- OPERATIVO CLIENTE: solo sus tickets -->
+          <a href="#" class="nav-item nav-link {% if active_page == 'op_dashboard' %}active{% endif %}">
+            <i class="bi bi-ticket-perforated me-2"></i>Mis tickets
+          </a>
+          <a href="#" class="nav-item nav-link {% if active_page == 'op_new_ticket' %}active{% endif %}">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo ticket
+          </a>
+          {% endif %}
+
+          <!-- Cerrar sesión -->
+          <a href="{{ url_for('auth.logout') }}" class="nav-item nav-link">
+            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+          </a>
+
+          {% endif %}
+        </div>
+      </nav>
+    </div>
+
+    <!-- Sidebar End -->
+
+    <!-- Content Start -->
+    <div class="content">
+      <!-- Navbar Start -->
+      {% if session.get('user_id') %}
+      <!-- Navbar Start (solo si hay sesión) -->
+      <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+        <a href="{{ url_for('main.index') }}" class="navbar-brand d-flex d-lg-none me-4">
+          <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+        </a>
+        <a href="#" class="sidebar-toggler flex-shrink-0">
+          <i class="fa fa-bars"></i>
+        </a>
+
+        <div class="navbar-nav align-items-center ms-auto">
+          <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+              <img class="rounded-circle me-lg-2" src="{{ url_for('static', filename='img/ITMULTI.jpg') }}" alt=""
+                style="width: 40px; height: 40px" />
+              <span class="d-none d-lg-inline-flex">
+                {{ session.get('username', 'User') }}
+              </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+              <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Cerrar sesión</a>
             </div>
           </div>
-        </nav>
+        </div>
+      </nav>
+      <!-- Navbar End -->
         <!-- Navbar End -->
+  {% endif %}
 
-        {% block content %}{% endblock %}
+      {% block content %}{% endblock %}
 
-        <!-- Back to Top -->
-        <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
+      <!-- Back to Top -->
+      <!-- <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top">
           <i class="bi bi-arrow-up"></i>
         </a> -->
-      </div>
-      <!-- Content End -->
     </div>
-    <!-- container-xxl End -->
+    <!-- Content End -->
+  </div>
+  <!-- container-xxl End -->
 
-    <!-- Sweet alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Sweet alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Bloque para JS específico de cada vista -->
-    {% block JS %}{% endblock %}
+  <!-- Bloque para JS específico de cada vista -->
+  {% block JS %}{% endblock %}
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+  <!-- JavaScript Libraries -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-    <!-- Template Javascript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <!-- Template Javascript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-    <!-- end -->
-  </body>
+  <!-- end -->
+</body>
+
 </html>

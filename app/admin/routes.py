@@ -23,51 +23,59 @@ def home_admin():
     if guard:
         return guard
 
+    user_id = session.get("user_id")
+
+    # # --- Inicializar nombre por defecto ---
+    # admin_name = "Administrador"
+
+    # # --- Obtener nombre del usuario desde tabla users ---
+    # if user_id:
+    #     try:
+    #         resp_user = (
+    #             supabase
+    #             .table("users")
+    #             .select("username")
+    #             .eq("username_id", user_id)
+    #             .single()
+    #             .execute()
+    #         )
+    #         if resp_user.data:
+    #             admin_name = resp_user.data.get("username", admin_name)
+
+    #         # Guardar también en sesión para usarlo en toda la app
+    #         session["username"] = admin_name
+
+    #     except Exception as e:
+    #         print("Error obteniendo usuario:", e)
+
     # ─────────────────────────────────────
     # MÉTRICAS PRINCIPALES
     # ─────────────────────────────────────
 
-    # Total de tickets
-    resp_tickets = (
-        supabase
-        .table("ticket")
-        .select("*", count="exact")
-        .execute()
-    )
+    resp_tickets = supabase.table("ticket").select("*", count="exact").execute()
     total_tickets = resp_tickets.count or 0
 
-    # Total de usuarios
-    resp_users = (
-        supabase
-        .table("users")
-        .select("username_id", count="exact")
-        .execute()
-    )
+    resp_users = supabase.table("users").select("username_id", count="exact").execute()
     total_users = resp_users.count or 0
 
-    # Total colaboradores
     resp_collab = (
-        supabase
-        .table("users")
+        supabase.table("users")
         .select("username_id", count="exact")
         .eq("role", "admin_tech")
         .execute()
     )
     total_collaborators = resp_collab.count or 0
 
-    # Total compañías
     resp_companies = (
-        supabase
-        .table("company")
+        supabase.table("company")
         .select("company_id", count="exact")
         .execute()
     )
     total_companies = resp_companies.count or 0
 
     # ─────────────────────────────────────
-    # TICKETS RECIENTES (5)
+    # TICKETS RECIENTES
     # ─────────────────────────────────────
-
     resp_recent = (
         supabase
         .table("ticket")
@@ -82,9 +90,8 @@ def home_admin():
 
     for row in raw_tickets:
         category_id = row.get("category_id")
-
-        # Nombre de la categoría
         category_name = "Sin categoría"
+
         if category_id:
             try:
                 resp_cat = (
@@ -96,11 +103,10 @@ def home_admin():
                     .execute()
                 )
                 if resp_cat.data:
-                    category_name = resp_cat.data.get("name", category_name)
-            except Exception as e:
-                print("Error obteniendo categoría:", e)
+                    category_name = resp_cat.data["name"]
+            except:
+                pass
 
-        # Colores de estado
         status = row.get("status") or "open"
         status_color = {
             "open": "primary",
@@ -108,31 +114,24 @@ def home_admin():
             "pending": "warning",
         }.get(status, "secondary")
 
-        # Prioridad
-        pr_id = row.get("priority_id")
-        priority_info = {
+        priority_id = row.get("priority_id")
+        priority, priority_color = {
             1: ("Baja", "success"),
             2: ("Media", "warning"),
             3: ("Alta", "danger"),
-        }.get(pr_id, ("N/D", "secondary"))
+        }.get(priority_id, ("N/D", "secondary"))
 
-        priority, priority_color = priority_info
-
-        # Construir objeto final
         recent_tickets.append({
-            "id": row.get("ticket_id"),
-            "title": row.get("title") or "Sin título",
+            "id": row["ticket_id"],
+            "title": row.get("title", "Sin título"),
             "status": status,
             "status_color": status_color,
             "priority": priority,
             "priority_color": priority_color,
-            "category_name": category_name,       # 👈 ahora mostramos la categoría
+            "category_name": category_name,
             "created_at": row.get("created_at"),
         })
 
-    # ─────────────────────────────────────
-    # Render
-    # ─────────────────────────────────────
     return render_template(
         "admin/homeAdmin.html",
         total_tickets=total_tickets,
@@ -140,6 +139,7 @@ def home_admin():
         total_collaborators=total_collaborators,
         total_companies=total_companies,
         recent_tickets=recent_tickets,
+        # admin_name=admin_name, 
         active_page="admin_home",
     )
 

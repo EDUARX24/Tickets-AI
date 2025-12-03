@@ -119,6 +119,8 @@ def login():
             session["user_id"] = user.get("username_id") or user.get("id")
             session["email"] = user["email"]
             session["role"] = user["role"]
+             # ⭐ NUEVO: guardar el nombre de usuario para la navbar
+            session["username"] = user.get("username") or user["email"]
 
             print(f"User role: {session['role']}")
 
