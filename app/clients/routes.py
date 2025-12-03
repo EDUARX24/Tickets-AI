@@ -5,6 +5,7 @@ from datetime import datetime
 from werkzeug.security import (
     generate_password_hash, check_password_hash
 )
+from math import ceil
 
 #blueprint para los clientes administradores
 client_admin_bp = Blueprint("client_admin", __name__)
@@ -117,12 +118,10 @@ def create_company():
     }
     return render_template("notification.html", data=data)
 
-#endpoint de bienvenida para admin_cliente
 @client_admin_bp.route("/client_admin/home")
 def home_client_admin():
     # ─────────────────────────────────────────────
-    # Proteger la ruta: solo usuarios logueados
-    # y con rol admin_cliente
+    # Proteger la ruta
     # ─────────────────────────────────────────────
     if "user_id" not in session:
         data = {
@@ -143,7 +142,7 @@ def home_client_admin():
         return render_template("notification.html", data=data)
 
     # ─────────────────────────────────────────────
-    # Obtener información de la compañía y del admin
+    # Info de compañía y admin
     # ─────────────────────────────────────────────
     company_name = "Sin compañía asociada"
     admin_name = "Administrador"
@@ -151,7 +150,7 @@ def home_client_admin():
     user_id = session.get("user_id")
     company_id = session.get("company_id")
 
-    # --- Obtener nombre del admin desde users ---
+    # --- Nombre del admin (tabla users) ---
     if user_id:
         try:
             resp_user = (
@@ -167,7 +166,7 @@ def home_client_admin():
         except Exception as e:
             print("Error obteniendo usuario:", e)
 
-    # --- Obtener nombre de la compañía ---
+    # --- Nombre de la compañía ---
     if company_id:
         try:
             resp_company = (
@@ -188,13 +187,242 @@ def home_client_admin():
         except Exception as e:
             print("Error obteniendo compañía:", e)
 
+    # ─────────────────────────────────────────────
+    # Métricas de tickets
+    # ─────────────────────────────────────────────
+    open_tickets = 0
+    resolved_tickets = 0
+    overdue_tickets = 0
+    month_tickets = 0
+    total_tickets = 0
+
+    if company_id:
+        try:
+            # Total de tickets de la empresa
+            resp_total = (
+                supabase
+                .table("ticket")
+                .select("ticket_id", count="exact")
+                .eq("id_company", company_id)
+                .execute()
+            )
+            total_tickets = resp_total.count or 0
+
+            # Tickets abiertos (solo status = 'open'; ajusta si quieres incluir in_progress/on_hold)
+            resp_open = (
+                supabase
+                .table("ticket")
+                .select("ticket_id", count="exact")
+                .eq("id_company", company_id)
+                .eq("status", "open")
+                .execute()
+            )
+            open_tickets = resp_open.count or 0
+
+            # Tickets resueltos (resolved + closed)
+            resp_resolved = (
+                supabase
+                .table("ticket")
+                .select("ticket_id", count="exact")
+                .eq("id_company", company_id)
+                .in_("status", ["resolved", "closed"])
+                .execute()
+            )
+            resolved_tickets = resp_resolved.count or 0
+
+            # Tickets fuera de SLA:
+            # ejemplo: response_due_at vencida y ticket no cerrado/cancelado
+            now_iso = datetime.utcnow().isoformat()
+
+            resp_overdue = (
+                supabase
+                .table("ticket")
+                .select("ticket_id", count="exact")
+                .eq("id_company", company_id)
+                .not_.in_("status", ["resolved", "closed", "cancelled"])
+                .lt("response_due_at", now_iso)
+                .execute()
+            )
+            overdue_tickets = resp_overdue.count or 0
+
+            # Tickets creados este mes
+            now = datetime.utcnow()
+            start_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_month_iso = start_month.isoformat()
+
+            resp_month = (
+                supabase
+                .table("ticket")
+                .select("ticket_id", count="exact")
+                .eq("id_company", company_id)
+                .gte("created_at", start_month_iso)
+                .execute()
+            )
+            month_tickets = resp_month.count or 0
+
+        except Exception as e:
+            print("Error obteniendo métricas de tickets:", e)
 
     return render_template(
         "clients/homeClients.html",
         company_name=company_name,
         admin_name=admin_name,
         active_page="client_dashboard",
+        open_tickets=open_tickets,
+        resolved_tickets=resolved_tickets,
+        overdue_tickets=overdue_tickets,
+        month_tickets=month_tickets,
+        total_tickets=total_tickets,
     )
+
+#endpont para ver los tickets de la compañia
+@client_admin_bp.route("/client_admin/tickets")
+def company_tickets():
+    # Proteger la ruta
+    if "user_id" not in session:
+        data = {
+            "icon": "warning",
+            "title": "Sesión requerida",
+            "text": "Debes iniciar sesión para acceder a esta página.",
+            "redirect": url_for("auth.login"),
+        }
+        return render_template("notification.html", data=data)
+
+    if session.get("role") != "admin_cliente":
+        data = {
+            "icon": "error",
+            "title": "Acceso denegado",
+            "text": "No tienes permisos para acceder a esta página.",
+            "redirect": url_for("main.index"),
+        }
+        return render_template("notification.html", data=data)
+      # ─────────────────────────────────────────────
+    # Info de compañía y admin
+    # ─────────────────────────────────────────────
+    company_name = "Sin compañía asociada"
+    admin_name = "Administrador"
+
+    user_id = session.get("user_id")
+    company_id = session.get("company_id")
+
+    # --- Nombre del admin (tabla users) ---
+    if user_id:
+        try:
+            resp_user = (
+                supabase
+                .table("users")
+                .select("username")
+                .eq("username_id", user_id)
+                .single()
+                .execute()
+            )
+            if resp_user.data:
+                admin_name = resp_user.data.get("username", admin_name)
+        except Exception as e:
+            print("Error obteniendo usuario:", e)
+
+    # --- Nombre de la compañía ---
+    if company_id:
+        try:
+            resp_company = (
+                supabase
+                .table("company")
+                .select("company_id, name, commercialName")
+                .eq("company_id", company_id)
+                .single()
+                .execute()
+            )
+            company = resp_company.data
+            if company:
+                company_name = (
+                    company.get("commercialName")
+                    or company.get("name")
+                    or company_name
+                )
+        except Exception as e:
+            print("Error obteniendo compañía:", e)
+
+      # ─────────────────────────────────────────────
+    # Obtener tickets de la compañía
+    # ─────────────────────────────────────────────
+    page = request.args.get("page", 1, type=int)
+    per_page = 10  # tickets por página
+
+    tickets = []
+    total_tickets = 0
+    total_pages = 1
+
+    if company_id:
+        try:
+            # calcular rango para Supabase (inclusive)
+            start = (page - 1) * per_page
+            end = start + per_page - 1
+
+            resp_tickets = (
+                supabase
+                .table("ticket")
+                .select("ticket_id, title, status, created_at", count="exact")
+                .eq("id_company", company_id)
+                .order("created_at", desc=True)
+                .range(start, end)
+                .execute()
+            )
+
+            tickets = resp_tickets.data or []
+            total_tickets = resp_tickets.count or 0
+            total_pages = max(ceil(total_tickets / per_page), 1)
+
+        except Exception as e:
+            print("Error obteniendo tickets de la compañía:", e)
+
+    return render_template(
+        "clients/tickets-company.html",
+        active_page="company_tickets",
+        company_name=company_name,
+        admin_name=admin_name,
+        tickets=tickets,
+        page=page,
+        total_pages=total_pages,
+        total_tickets=total_tickets,
+        per_page=per_page,
+    )
+
+# endpoint ver tickets por id
+@client_admin_bp.route("/client_admin/tickets/<int:ticket_id>")
+def view_ticket(ticket_id):
+    if "user_id" not in session:
+        return redirect(url_for("auth.login"))
+
+    if session.get("role") != "admin_cliente":
+        return redirect(url_for("main.index"))
+
+    company_id = session.get("company_id")
+
+    try:
+        resp = (
+            supabase
+            .table("ticket")
+            .select("*")
+            .eq("ticket_id", ticket_id)
+            .eq("id_company", company_id)  # seguridad: que sea de su empresa
+            .single()
+            .execute()
+        )
+        ticket = resp.data
+    except Exception as e:
+        print("Error obteniendo detalle de ticket:", e)
+        ticket = None
+
+    if not ticket:
+        data = {
+            "icon": "error",
+            "title": "Ticket no encontrado",
+            "text": "El ticket no existe o no pertenece a tu empresa.",
+            "redirect": url_for("client_admin.company_tickets"),
+        }
+        return render_template("notification.html", data=data)
+
+    return render_template("clients/ticket-detail.html", ticket=ticket)
 
 
 #endpoint para crear usuarios de compañia

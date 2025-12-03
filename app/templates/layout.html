@@ -192,11 +192,18 @@
             >
               <i class="fa fa-building me-2"></i>Panel de cliente
             </a>
+            <!-- vista de los tickets de su empresa -->
+            <a
+              href="{{ url_for('client_admin.company_tickets') }}"
+              class="nav-item nav-link {% if active_page == 'company_tickets' %}active{% endif %}"
+            >
+              <i class="bi bi-ticket-perforated"></i> Tickets
+            </a>
             <a
               href="{{ url_for('client_admin.create_company') }}"
               class="nav-item nav-link {% if active_page == 'create_company' %}active{% endif %}"
             >
-              <i class="fa fa-plus me-2"></i>Crear empresa
+              <i class="bi bi-building-fill-add"></i> Crear empresa
             </a>
             <a
               href="{{ url_for('client_admin.create_company_user') }}"
@@ -223,7 +230,7 @@
 
             <!-- Cerrar sesión -->
             <a href="{{ url_for('auth.logout') }}" class="nav-item nav-link">
-              <i class="bi bi-box-arrow-right"></i>Cerrar sesión
+              <i class="bi bi-box-arrow-right"></i> Cerrar sesión
             </a>
 
             {% endif %}
