@@ -8,8 +8,7 @@
     <div class="col-12 col-lg-10">
 
       <!-- Encabezado -->
-      <div class="rounded p-4 shadow-sm mb-4"
-           style="background: linear-gradient(135deg, #e8f5e9, #f1fff5);">
+      <div class="rounded p-4 shadow-sm mb-4" style="background: linear-gradient(135deg, #e8f5e9, #f1fff5);">
         <h5 class="mb-1 text-success fw-bold">
           <i class="bi bi-stars me-2"></i> Crear ticket con IA
         </h5>
@@ -25,55 +24,28 @@
           <div class="bg-white rounded p-4 shadow-sm">
 
             <!-- Por ahora el formulario es solo visual, no hace POST real -->
-            <form action="#" method="post">
+            <form action="{{ url_for('client_admin.create_ticket_ai') }}" method="post">
 
-              <!-- Descripción libre -->
+              <!-- TÍTULO -->
               <div class="mb-3">
-                <label for="ia_description" class="form-label fw-semibold">
-                  Describe el incidente <span class="text-danger">*</span>
-                </label>
-                <textarea
-                  id="ia_description"
-                  name="ia_description"
-                  class="form-control"
-                  rows="8"
-                  placeholder="Ejemplo: Desde hoy en la mañana las PCs de caja no se conectan al sistema de facturación. El resto de la oficina sí tiene internet. Ya reiniciamos el router y los equipos, pero sigue igual..."
-                  required
-                ></textarea>
+                <label class="form-label fw-semibold">Título sugerido <span class="text-danger">*</span></label>
+                <input type="text" id="ia_title" name="ia_title" class="form-control"
+                  placeholder="Ejemplo: Problemas con Microsoft Teams" required />
               </div>
 
-              <!-- Campo opcional de contexto -->
+              <!-- DESCRIPCIÓN -->
               <div class="mb-3">
-                <label for="extra_context" class="form-label fw-semibold">
-                  Información adicional (opcional)
-                </label>
-                <textarea
-                  id="extra_context"
-                  name="extra_context"
-                  class="form-control"
-                  rows="3"
-                  placeholder="Ejemplo: Sucursal, número de equipos afectados, código de error, cambios recientes, etc."
-                ></textarea>
+                <label class="form-label fw-semibold">Descripción del incidente <span
+                    class="text-danger">*</span></label>
+                <textarea id="ia_description" name="ia_description" class="form-control" rows="4"
+                  placeholder="Describe aquí el problema con todos los detalles..." required></textarea>
               </div>
 
-              <!-- Nota de estado -->
-              <div class="alert alert-success small" role="alert">
-                <i class="bi bi-info-circle me-1"></i>
-                En esta versión, la descripción se utiliza solo como ejemplo visual.
-                La lógica de IA y el guardado del ticket se implementarán en la siguiente fase.
-              </div>
-
-              <!-- Botones -->
-              <div class="d-flex justify-content-between mt-4">
-                <a href="{{ url_for('client_admin.home_client_admin') }}"
-                   class="btn btn-outline-secondary">
-                  Volver
-                </a>
-                <button type="button" class="btn btn-success">
-                  Analizar con IA (próximamente)
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-success">
+                  <i class="bi bi-robot me-1"></i> Generar ticket con IA
                 </button>
               </div>
-
             </form>
           </div>
         </div>

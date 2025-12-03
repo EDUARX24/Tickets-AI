@@ -2,14 +2,38 @@
 from flask import Blueprint, app, render_template, session, redirect, url_for,request, flash
 from app import supabase
 from datetime import datetime
-from werkzeug.security import (
-    generate_password_hash, check_password_hash
-)
+from werkzeug.security import (generate_password_hash, check_password_hash)
 from math import ceil
+import os
+import requests
 
 #blueprint para los clientes administradores
 client_admin_bp = Blueprint("client_admin", __name__)
 
+TICKETS_IA_API_URL = os.getenv("TICKETS_IA_API_URL", "http://localhost:8000")
+
+# Mapeo nombre categoría (modelo) -> ID en tu tabla category
+CATEGORY_NAME_TO_ID = {
+    "Red y Conectividad": 1,
+    "Software y Aplicaciones": 2,
+    "Hardware": 3,
+    "Impresoras y Escáneres": 4,
+    "Accesos y Contraseñas": 5,
+    "Archivos y Almacenamiento": 6,
+    "CCTV y Seguridad": 7,
+    "Telefonía": 8,
+    "Soporte General": 9,
+}
+
+# Mapeo nombre prioridad (modelo) -> ID en tabla priority
+PRIORITY_NAME_TO_ID = {
+    "Baja": 1,
+    "Media": 2,
+    "Alta": 3,
+    "Urgente": 4,
+}
+
+# Endpoint para crear una nueva compañía
 @client_admin_bp.route("/company/create", methods=["GET", "POST"])
 def create_company():
     # ─────────────────────────────────────────────
@@ -118,6 +142,7 @@ def create_company():
     }
     return render_template("notification.html", data=data)
 
+# Endpoint home del admin de clientes
 @client_admin_bp.route("/client_admin/home")
 def home_client_admin():
     # ─────────────────────────────────────────────
@@ -647,19 +672,95 @@ def create_ticket_manual():
     }
     return render_template("notification.html", data=data)
 
-@client_admin_bp.route("/client_admin/tickets/ia", methods=["GET"])
+@client_admin_bp.route("/client_admin/tickets/ia", methods=["GET", "POST"])
 def create_ticket_ai():
-    # Proteger la ruta (mismo criterio que el ticket manual)
+
     if "user_id" not in session:
         return redirect(url_for("auth.login"))
 
     if session.get("role") not in ["admin_cliente", "admin_op"]:
         return redirect(url_for("main.index"))
 
-    return render_template(
-        "clients/createTicketAI.html",
-        active_page="create_ticket_ai"
-    )
+    # GET = mostrar formulario
+    if request.method == "GET":
+        return render_template("clients/createTicketAI.html", active_page="create_ticket_ai")
 
+    # POST = recibir datos del formulario
+    title = request.form.get("ia_title", "").strip()
+    description = request.form.get("ia_description", "").strip()
 
+    if not title or not description:
+        # mostrar error con sweetalert
+        data = {
+            "icon": "error",
+            "title": "Datos incompletos",   
+            "text": "Debes ingresar tanto título como descripción.",
+            "redirect": url_for("client_admin.create_ticket_ai"),
+        }
+        return render_template("notification.html", data=data)
+
+    # --- Llamar a la API IA ---
+    try:
+        resp = requests.post(
+            f"{TICKETS_IA_API_URL}/api/predict-ticket",
+            json={
+                "title": title,
+                "description": description,
+            }
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except Exception as e:
+        print("API Error:", e)
+        # mostrar error con sweetalert
+        data = {
+            "icon": "error",
+            "title": "Error de IA",
+            "text": "Hubo un error al comunicarse con el servicio de IA. Inténtalo más tarde.",
+            "redirect": url_for("client_admin.create_ticket_ai"),
+        }
+        return render_template("notification.html", data=data)
+
+    # Procesar respuesta
+    cat_name = data["category_name"]
+    prior_name = data["priority_name"]
+    priority_value = data["priority_value"]
+
+    # Aquí mapeas a IDs reales
+    category_id = CATEGORY_NAME_TO_ID.get(cat_name)
+    priority_id = PRIORITY_NAME_TO_ID.get(prior_name)
+
+    # Crear ticket en Supabase
+    try:
+        payload = {
+            "id_company": session.get("company_id"),
+            "created_by_company_user_id": session.get("company_user_id"),
+            "title": title,
+            "description": description,
+            "category_id": category_id,
+            "priority_id": priority_id,
+            "status": "open"
+        }
+
+        supabase.table("ticket").insert(payload).execute()
+
+    except Exception as e:
+        print("Error Supabase:", e)
+        # mostrar error con sweetalert
+        data = {
+            "icon": "error",
+            "title": "Error al guardar ticket",
+            "text": "Ocurrió un error al guardar el ticket generado por IA.",
+            "redirect": url_for("client_admin.create_ticket_ai"),
+        }
+        return render_template("notification.html", data=data)
+    
+    # Si todo bien
+    data = {
+        "icon": "success",
+        "title": "Ticket creado",
+        "text": "El ticket fue creado correctamente usando IA.",
+        "redirect": url_for("client_admin.company_tickets"),
+    }
+    return render_template("notification.html", data=data)
 
