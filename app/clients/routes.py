@@ -305,35 +305,119 @@ def choose_create_ticket():
         active_page="op_new_ticket"
     )
 
-@client_admin_bp.route("/client_admin/tickets/manual", methods=["GET"])
+@client_admin_bp.route("/client_admin/tickets/manual", methods=["GET", "POST"])
 def create_ticket_manual():
-    # Validaciones básicas de sesión/rol
+    # 1. Validar sesión y rol
     if "user_id" not in session:
         return redirect(url_for("auth.login"))
 
     if session.get("role") not in ["admin_cliente", "admin_op"]:
         return redirect(url_for("main.index"))
 
-    # Obtener categorías desde Supabase
-    try:
-        resp_cat = supabase.table("category").select("*").execute()
-        categories = resp_cat.data or []
-    except:
-        categories = []
+    # ─────────────────────────────
+    # 2. Si es GET → mostrar formulario
+    # ─────────────────────────────
+    if request.method == "GET":
+        try:
+            resp_cat = supabase.table("category").select("*").order("sort_order").execute()
+            categories = resp_cat.data or []
+        except Exception:
+            categories = []
 
-    # Obtener prioridades desde Supabase
-    try:
-        resp_pri = supabase.table("priority").select("*").order("sort_order").execute()
-        priorities = resp_pri.data or []
-    except:
-        priorities = []
+        try:
+            resp_pri = supabase.table("priority").select("*").order("sort_order").execute()
+            priorities = resp_pri.data or []
+        except Exception:
+            priorities = []
 
-    return render_template(
-        "clients/createTicketManual.html",
-        categories=categories,
-        priorities=priorities,
-        active_page="create_ticket_manual"
-    )
+        return render_template(
+            "clients/createTicketManual.html",
+            categories=categories,
+            priorities=priorities,
+            active_page="create_ticket_manual",
+        )
+
+    # ─────────────────────────────
+    # 3. Si es POST → crear ticket
+    # ─────────────────────────────
+    form = request.form
+
+    title = (form.get("title") or "").strip()
+    description = (form.get("description") or "").strip()
+    category_id = form.get("category_id")
+    priority_id = form.get("priority_id")
+
+    # Validación rápida
+    if not title or not description or not category_id or not priority_id:
+        # sweetalert puede usarse aquí también
+        data = {
+            "icon": "error",
+            "title": "Datos incompletos",
+            "text": "Todos los campos marcados con * son obligatorios.",
+            "redirect": url_for("client_admin.create_ticket_manual"),
+        }
+        return render_template("notification.html", data=data)
+
+    # Conversión a int (la tabla ticket usa int8)
+    try:
+        category_id = int(category_id)
+        priority_id = int(priority_id)
+    except ValueError:
+        data = {
+            "icon": "error",
+            "title": "Error de validación",
+            "text": "Categoría o prioridad no válida.",
+            "redirect": url_for("client_admin.create_ticket_manual"),
+        }
+        return render_template("notification.html", data=data)
+
+    # Datos de sesión
+    company_id = session.get("company_id")          # la empresa del admin_cliente
+    # created_by = session.get("user_id")             # quien crea el ticket
+    
+    # si luego tienes company_user_id, puedes usarlo aquí
+
+    payload = {
+        "id_company": company_id,
+        # "created_by_company_user_id": created_by,   # ajusta al nombre real de tu columna
+        "assigned_to_staff_user_id": None,          # sin asignar por ahora
+        "title": title,
+        "description": description,
+        "category_id": category_id,
+        "priority_id": priority_id,
+        "status": "open",                           # ENUM ticket_status
+        "created_at": datetime.utcnow().isoformat()
+    }
+
+    try:
+        resp = supabase.table("ticket").insert(payload).execute()
+    except Exception as e:
+        print("Error al crear ticket:", e)
+        data = {
+            "icon": "error",
+            "title": "Error al registrar ticket",
+            "text": "Ocurrió un error al registrar el ticket.",
+            "redirect": url_for("client_admin.create_ticket_manual"),
+        }
+        return render_template("notification.html", data=data)
+
+    # Si todo fue bien
+    if resp.data:
+        data = {
+            "icon": "success",
+            "title": "Ticket registrado",
+            "text": "El ticket se registró correctamente.",
+            "redirect": url_for("client_admin.home_client_admin"),
+        }
+        return render_template("notification.html", data=data)
+
+    data = {
+        "icon": "error",
+        "title": "Error",
+        "text": "No se pudo registrar el ticket. Intenta nuevamente.",
+        "redirect": url_for("client_admin.create_ticket_manual"),
+    }
+    return render_template("notification.html", data=data)
 
 @client_admin_bp.route("/client_admin/tickets/ia", methods=["GET"])
 def create_ticket_ai():

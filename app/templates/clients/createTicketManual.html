@@ -2,13 +2,13 @@
 {% block title %}Crear ticket manual{% endblock %}
 
 {% block content %}
-<div class="container-fluid pt-4 px-4" style="background-color:#f5f6fa; min-height: 100vh;">
+<div class="container-fluid pt-2 px-4" style="background-color:#f5f6fa; min-height: 100vh;">
 
   <div class="row justify-content-center">
     <div class="col-12 col-lg-10">
 
       <!-- Encabezado -->
-      <div class="rounded p-4 shadow-sm mb-4"
+      <div class="rounded p-4 shadow-sm mb-3"
            style="background: linear-gradient(135deg, #e3f2fd, #f1f8ff);">
         <h5 class="mb-1 text-primary fw-bold">
           <i class="bi bi-pencil-square me-2"></i> Crear ticket manual
@@ -99,7 +99,7 @@
               </div>
 
               <!-- Descripción -->
-              <div class="mb-3">
+              <div class="mb-2">
                 <label for="description" class="form-label fw-semibold">
                   Descripción detallada <span class="text-danger">*</span>
                 </label>
@@ -107,7 +107,7 @@
                   id="description"
                   name="description"
                   class="form-control"
-                  rows="6"
+                  rows="3"
                   placeholder="Describe el problema, los equipos afectados, mensajes de error, desde cuándo ocurre, etc."
                   required
                 ></textarea>
