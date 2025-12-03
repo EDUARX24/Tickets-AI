@@ -2,17 +2,161 @@
 {% block title %}Dashboard Técnico{% endblock %}
 
 {% block content %}
-<div class="container-fluid pt-4 px-4">
-    <div class="row g-4">
-        <div class="col-12">
-            <div class="bg-light rounded p-4 shadow-sm">
+<div class="container-fluid pt-4 px-4" style="background-color: #f5f6fa; min-height: 100vh;">
 
-                <h5 class="mb-4 text-primary fw-bold">
-                    <i class="fa fa-cogs"></i> Dashboard Técnico
-                </h5>
-                <p>Bienvenido al dashboard técnico. Aquí puedes gestionar las operaciones técnicas del sistema.</p>
-            </div>
+  <!-- Encabezado -->
+  <div class="row g-4 mb-3">
+    <div class="col-12">
+      <div class="rounded p-4 shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center"
+           style="background: linear-gradient(135deg, #e3f2fd, #f1f8ff);">
+        <div>
+          <h5 class="mb-1 text-primary fw-bold">
+            <i class="fa fa-cogs me-2"></i> Dashboard técnico
+          </h5>
+          <p class="mb-0 text-muted">
+            Monitorea, gestiona y controla tus tickets asignados.
+          </p>
         </div>
+        <div class="mt-3 mt-md-0">
+          <span class="badge bg-primary text-light px-3 py-2 rounded-pill shadow-sm">
+            Técnico: <strong>{{ session.get('username', 'Técnico') }}</strong>
+          </span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <!-- Métricas principales -->
+  <div class="row g-4 mb-3">
+
+    <!-- Tarjeta 1 -->
+    <div class="col-sm-6 col-xl-4">
+      <div class="rounded shadow-sm p-4 d-flex justify-content-between align-items-center"
+           style="background-color: #ffffff;">
+        <div>
+          <p class="mb-1 text-muted">Mis tickets abiertos</p>
+          <h3 class="mb-0 fw-bold text-primary">0</h3>
+          <small class="text-muted">En atención</small>
+        </div>
+        <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center shadow-sm"
+             style="width: 50px; height: 50px;">
+          <i class="bi bi-ticket-detailed fs-4"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta 2 -->
+    <div class="col-sm-6 col-xl-4">
+      <div class="rounded shadow-sm p-4 d-flex justify-content-between align-items-center"
+           style="background-color: #ffffff;">
+        <div>
+          <p class="mb-1 text-muted">Tickets urgentes</p>
+          <h3 class="mb-0 fw-bold text-danger">0</h3>
+          <small class="text-muted">Alta / crítica</small>
+        </div>
+        <div class="rounded-circle bg-danger-subtle text-danger d-flex align-items-center justify-content-center shadow-sm"
+             style="width: 50px; height: 50px;">
+          <i class="bi bi-exclamation-octagon fs-4"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta 3 -->
+    <div class="col-sm-6 col-xl-4">
+      <div class="rounded shadow-sm p-4 d-flex justify-content-between align-items-center"
+           style="background-color: #ffffff;">
+        <div>
+          <p class="mb-1 text-muted">En espera del cliente</p>
+          <h3 class="mb-0 fw-bold text-warning">0</h3>
+          <small class="text-muted">Respuestas pendientes</small>
+        </div>
+        <div class="rounded-circle bg-warning-subtle text-warning d-flex align-items-center justify-content-center shadow-sm"
+             style="width: 50px; height: 50px;">
+          <i class="bi bi-hourglass-split fs-4"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zona principal -->
+  <div class="row g-4">
+
+    <!-- Tabla -->
+    <div class="col-lg-8">
+      <div class="rounded shadow-sm p-4" style="background-color: #ffffff;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h6 class="mb-0 fw-semibold text-dark">Mis tickets asignados</h6>
+            <small class="text-muted">Tickets que tienes actualmente a cargo.</small>
+          </div>
+
+          <div class="d-flex gap-2">
+            <select class="form-select form-select-sm shadow-sm">
+              <option>Estado: Todos</option>
+            </select>
+            <select class="form-select form-select-sm shadow-sm">
+              <option>Prioridad: Todas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#0000</td>
+                <td class="text-muted">No hay tickets asignados todavía.</td>
+                <td colspan="5"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel lateral -->
+    <div class="col-lg-4">
+
+      <!-- Alertas SLA -->
+      <div class="rounded shadow-sm p-4 mb-3" style="background-color: #ffffff;">
+        <h6 class="fw-semibold text-danger">
+          <i class="bi bi-stopwatch me-1"></i> Alertas de SLA
+        </h6>
+        <p class="text-muted small mb-2">
+          Monitorea tickets próximos a vencer.
+        </p>
+        <ul class="list-group list-group-flush small">
+          <li class="list-group-item px-0 text-muted">
+            No hay alertas activas.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Buenas prácticas -->
+      <div class="rounded shadow-sm p-4" style="background-color: #ffffff;">
+        <h6 class="fw-semibold text-warning">
+          <i class="bi bi-lightbulb me-1"></i> Buenas prácticas
+        </h6>
+        <ul class="small text-muted ps-3 mb-0">
+          <li>Confirma con el cliente antes de cerrar.</li>
+          <li>Documenta siempre la solución aplicada.</li>
+          <li>Adjunta evidencia si cambias configuraciones.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 {% endblock %}

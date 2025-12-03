@@ -32,6 +32,7 @@ def create_company():
             "redirect": url_for("main.index"),
         }
         return render_template("notification.html", data=data)
+    
 
     # ─────────────────────────────────────────────
     # 2. Método GET → solo mostrar el formulario
@@ -140,8 +141,61 @@ def home_client_admin():
             "redirect": url_for("main.index"),
         }
         return render_template("notification.html", data=data)
-    
-    return render_template("clients/homeClients.html")
+
+    # ─────────────────────────────────────────────
+    # Obtener información de la compañía y del admin
+    # ─────────────────────────────────────────────
+    company_name = "Sin compañía asociada"
+    admin_name = "Administrador"
+
+    user_id = session.get("user_id")
+    company_id = session.get("company_id")
+
+    # --- Obtener nombre del admin desde users ---
+    if user_id:
+        try:
+            resp_user = (
+                supabase
+                .table("users")
+                .select("username")
+                .eq("username_id", user_id)
+                .single()
+                .execute()
+            )
+            if resp_user.data:
+                admin_name = resp_user.data.get("username", admin_name)
+        except Exception as e:
+            print("Error obteniendo usuario:", e)
+
+    # --- Obtener nombre de la compañía ---
+    if company_id:
+        try:
+            resp_company = (
+                supabase
+                .table("company")
+                .select("company_id, name, commercialName")
+                .eq("company_id", company_id)
+                .single()
+                .execute()
+            )
+            company = resp_company.data
+            if company:
+                company_name = (
+                    company.get("commercialName")
+                    or company.get("name")
+                    or company_name
+                )
+        except Exception as e:
+            print("Error obteniendo compañía:", e)
+
+
+    return render_template(
+        "clients/homeClients.html",
+        company_name=company_name,
+        admin_name=admin_name,
+        active_page="client_dashboard",
+    )
+
 
 #endpoint para crear usuarios de compañia
 @client_admin_bp.route("/client_admin/users", methods=["GET", "POST"])
@@ -220,3 +274,44 @@ def test_supabase():
     print(resp)
     return "OK"
     
+# ============================
+# Nuevo ticket (pantalla para elegir modo)
+# ============================
+@client_admin_bp.route("/client_admin/tickets/new" , methods=["GET"])
+def choose_create_ticket():
+    # Proteger la ruta (ajusta el rol según tu diseño)
+    if "user_id" not in session:
+        data = {
+            "icon": "warning",
+            "title": "Sesión requerida",
+            "text": "Debes iniciar sesión para acceder a esta página.",
+            "redirect": url_for("auth.login"),
+        }
+        return render_template("notification.html", data=data)
+
+    # Aquí podrías permitir tanto admin_cliente como admin_op si quieres:
+    if session.get("role") not in ["admin_cliente", "admin_op"]:
+        data = {
+            "icon": "error",
+            "title": "Acceso denegado",
+            "text": "No tienes permisos para acceder a esta página.",
+            "redirect": url_for("main.index"),
+        }
+        return render_template("notification.html", data=data)
+
+    # Renderizar la vista de selección de tipo de ticket
+    return render_template(
+       "clients/CreateTicket.html",
+        active_page="op_new_ticket"
+    )
+
+@client_admin_bp.route("/client_admin/tickets/manual", methods=["GET"])
+def create_ticket_manual():
+    # Por ahora solo una página de "en construcción"
+    return "<h1>Formulario de ticket manual (en construcción)</h1>"
+
+@client_admin_bp.route("/client_admin/tickets/ia", methods=["GET"])
+def create_ticket_ai():
+    return "<h1>Formulario de ticket con IA (en construcción)</h1>"
+
+

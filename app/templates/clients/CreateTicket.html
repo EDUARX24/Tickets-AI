@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block title %}Nuevo Ticket{% endblock %}
+{% block content %}
+
+<div class="container-fluid pt-4 px-4" style="background: #f5f7fb; min-height: 100vh;">
+
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+
+      <!-- Encabezado -->
+      <div class="rounded p-4 mb-4 shadow-sm"
+           style="background: linear-gradient(135deg, #f0f4ff, #ffffff); border-left: 4px solid #3b7ddd;">
+        <h4 class="fw-semibold mb-2 text-primary">Crear ticket</h4>
+        <p class="text-muted mb-0">
+          Selecciona cómo deseas crear el ticket. Puedes utilizar el formulario tradicional
+          o dejar que la IA genere el ticket automáticamente a partir de una descripción libre.
+        </p>
+      </div>
+
+      <!-- Opciones -->
+      <div class="row g-4">
+
+        <!-- Crear ticket manual -->
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100"
+               style="border-radius: 12px; border: 1px solid #e4e7ec; background: #ffffff;">
+            <div class="card-body p-4 d-flex flex-column">
+
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 55px; height: 55px; background: #e3e9ff; color: #3b7ddd;">
+                  <i class="bi bi-pencil-square fs-4"></i>
+                </div>
+                <h5 class="card-title mb-0 fw-semibold text-primary">Crear ticket manual</h5>
+              </div>
+
+              <p class="text-muted mb-4">
+                Completa un formulario detallado con título, categoría, prioridad y descripción.
+                Perfecto si deseas controlar toda la información manualmente.
+              </p>
+
+              <div class="mt-auto">
+                <a href="{{ url_for('client_admin.create_ticket_manual') }}"
+                   class="btn btn-primary w-100"
+                   style="border-radius: 10px;">
+                  Crear ticket manual
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Crear ticket con IA -->
+        <div class="col-md-6">
+          <div class="card shadow-sm border-0 h-100"
+               style="border-radius: 12px; border: 1px solid #e4e7ec; background: #ffffff;">
+            <div class="card-body p-4 d-flex flex-column">
+
+              <div class="d-flex align-items-center mb-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 55px; height: 55px; background: #e1f6ea; color: #2c9e61;">
+                  <i class="bi bi-stars fs-4"></i>
+                </div>
+                <h5 class="card-title mb-0 fw-semibold text-success">Crear ticket con IA</h5>
+              </div>
+
+              <p class="text-muted mb-4">
+                Describe el problema con tus palabras y nuestro modelo de IA clasificará automáticamente la categoría,
+                prioridad y título del ticket. Más rápido y recomendado.
+              </p>
+
+              <div class="mt-auto">
+                <a href="{{ url_for('client_admin.create_ticket_ai') }}"
+                   class="btn btn-success w-100"
+                   style="border-radius: 10px;">
+                  Crear ticket con IA
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div> <!-- row -->
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

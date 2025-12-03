@@ -18,13 +18,13 @@
             <p class="section-title mb-1">Panel de cliente</p>
             <h3 class="mb-1">Administración de tickets de soporte</h3>
             <p class="mb-0 text-muted">
-              Empresa: <strong>Nombre de la empresa</strong><br>
-              Admin: <strong>Nombre del administrador</strong>
+              Empresa: <strong>{{ company_name }}</strong><br>
+               Admin: <strong>{{ admin_name }}</strong>
             </p>
           </div>
           <div class="d-flex flex-wrap gap-2">
             <!-- Botón aún sin funcionalidad real -->
-            <a href="#" class="btn btn-primary">
+            <a href="{{ url_for('client_admin.choose_create_ticket') }}" class="btn btn-primary">
               <i class="bi bi-plus-circle me-1"></i> Nuevo ticket
             </a>
             <!-- ESTE SÍ ES FUNCIONAL -->
@@ -37,7 +37,7 @@
 
       <!-- MÉTRICAS PRINCIPALES -->
       <div class="col-sm-6 col-xl-3">
-        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+        <div class="bg-white stat-card h-100 d-flex align-items-center justify-content-between p-4">
           <div>
             <p class="mb-1 text-muted small">Tickets abiertos</p>
             <h4 class="mb-0">0</h4>
@@ -50,7 +50,7 @@
       </div>
 
       <div class="col-sm-6 col-xl-3">
-        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+        <div class="bg-white stat-card h-100 d-flex align-items-center justify-content-between p-4">
           <div>
             <p class="mb-1 text-muted small">Tickets resueltos</p>
             <h4 class="mb-0">0</h4>
@@ -63,7 +63,7 @@
       </div>
 
       <div class="col-sm-6 col-xl-3">
-        <div class="bg-white stat-card d-flex align-items-center justify-content-between p-4">
+       <div class="bg-white stat-card h-100 d-flex align-items-center justify-content-between p-4">
           <div>
             <p class="mb-1 text-muted small">Fuera de SLA</p>
             <h4 class="mb-0">0</h4>

@@ -4,11 +4,33 @@ from app import supabase
 
 admin_bp = Blueprint("admin", __name__)
 
-#endóint for sysAdmin dashboard
-@admin_bp.route("/admin")
-def home_admin():
+def require_sysadmin():
+    """
+    Pequeño helper para proteger rutas del SysAdmin.
+    Si no es sysAdmin, lo redirige al inicio.
+    """
     if session.get("role") != "sysAdmin":
         return redirect(url_for("main.index"))
+    return None
+
+# ============================
+# Dashboard SysAdmin
+# ============================
+@admin_bp.route("/admin")
+def home_admin():
+    guard = require_sysadmin()
+    if guard:
+        return guard
+
+    # Total de tickets (ajusta el nombre de la tabla si es distinto)
+    # Total de tickets  (tabla: ticket)
+    resp_tickets = (
+    supabase
+    .table("ticket")              # 👈 nombre correcto de la tabla
+    .select("*", count="exact")   # * para no depender del nombre de la columna
+    .execute()
+    )
+    total_tickets = resp_tickets.count or 0
 
     # Total de usuarios
     resp_users = (
@@ -29,7 +51,7 @@ def home_admin():
     )
     total_collaborators = resp_collab.count or 0
 
-    # Total de compañías (opcional)
+    # Total de compañías
     resp_companies = (
         supabase
         .table("company")
@@ -40,19 +62,77 @@ def home_admin():
 
     return render_template(
         "admin/homeAdmin.html",
+        total_tickets=total_tickets,
         total_users=total_users,
         total_collaborators=total_collaborators,
-        total_companies=total_companies, active_page="admin_home"
+        total_companies=total_companies,
+        active_page="admin_home",   # este lo usas en el sidebar
     )
 
+@admin_bp.route("/admin/tickets")
+def admin_tickets():
+    guard = require_sysadmin()
+    if guard:
+        return guard
 
-# Tech dashboard
+    # Traer todos los tickets (ajusta nombres de columnas según tu tabla)
+    resp = (
+        supabase
+        .table("ticket")   # 👈 aquí también en singular
+        .select("*")
+        .execute()
+    )
+    tickets = resp.data or []
+
+    return render_template(
+        "admin/ticketsList.html",
+        tickets=tickets,
+        active_page="admin_tickets",
+    )
+
+@admin_bp.route("/admin/users")
+def admin_users():
+    guard = require_sysadmin()
+    if guard:
+        return guard
+
+    resp = (
+        supabase
+        .table("users")
+        .select("*")
+        .execute()
+    )
+    users = resp.data or []
+
+    return render_template(
+        "admin/usersList.html",
+        users=users,
+        active_page="admin_users",
+    )
+
+@admin_bp.route("/admin/companies")
+def admin_companies():
+    guard = require_sysadmin()
+    if guard:
+        return guard
+
+    resp = (
+        supabase
+        .table("company")
+        .select("*")
+        .execute()
+    )
+    companies = resp.data or []
+
+    return render_template(
+        "admin/companiesList.html",
+        companies=companies,
+        active_page="admin_companies",
+    )
+
 @admin_bp.route("/admin/tech-dashboard")
 def tech_dashboard():
-    # opcional: proteger ruta solo para tech admins
     if session.get("role") != "admin_tech":
         return redirect(url_for("main.index"))
 
     return render_template("admin/techDashboard.html", active_page="tech_dashboard")
-
-#endpoint para crear categorias
